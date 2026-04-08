@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+
+<title>الصفات - Bubbles in Arabic</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #10B981;
+      --primary-hover: #059669;
+      --secondary: #3B82F6;
+      --bg-color: #F0F9FF;
+      --card-bg: #FFFFFF;
+      --text-dark: #1E293B;
+      --bubble-color: rgba(59, 130, 246, 0.1);
+    }
+
+    body {
+      font-family: 'Almarai', sans-serif;
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 20px;
+      color: var(--text-dark);
+      background-image: url('https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/background.png');
+      background-position: center;
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+    .lms-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 750px;
+      border: 4px solid #E0F2FE;
+    }
+
+    /* HEADER */
+    .header-container {
+      background-image: url("https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/background.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      text-align: center;
+      padding: 100px 20px 40px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      border-bottom: 4px solid var(--secondary);
+    }
+    .header-container::before { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(255,255,255,0.9)); z-index: 0; }
+    .header-container h1 { font-size: 32px; margin: 0; color: #2F4858; position: relative; z-index: 1; background: rgba(255,255,255,0.95); padding: 12px 30px; border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,.1); }
+    .brand-tag { position: relative; z-index: 1; font-size: 16px; font-weight: bold; color: var(--secondary); margin-top: 10px; background: rgba(255,255,255,0.9); padding: 5px 15px; border-radius: 20px; }
+
+    .slide-container { flex-grow: 1; padding: 30px; position: relative; overflow-y: auto; max-height: 600px;}
+    .slide { display: none; animation: fadeIn 0.4s ease; }
+    .slide.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* SLIDE HEADER & BACK BUTTON */
+    .slide-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #BFDBFE; padding-bottom: 10px; margin-bottom: 15px; }
+    .slide-header h2 { margin: 0; border: none; padding: 0; }
+    h2 { color: var(--secondary); font-size: 24px; }
+    h2.solo { margin-top: 0; border-bottom: 2px dashed #BFDBFE; padding-bottom: 10px; }
+    .back-menu-btn { background: #F8FAFC; color: var(--secondary); border: 2px solid #BFDBFE; padding: 8px 16px; border-radius: 12px; font-family: inherit; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; font-size: 15px;}
+    .back-menu-btn:hover { background: #EFF6FF; border-color: var(--secondary); transform: scale(1.05); }
+
+    .instruction { font-size: 18px; color: #64748B; margin-bottom: 20px; font-weight: bold; }
+    .feedback { margin-top: 15px; font-weight: bold; font-size: 18px; min-height: 27px; text-align: center; }
+
+    /* MENU GRID */
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+    .menu-btn { background: #fff; border: 3px solid #E2E8F0; padding: 25px 15px; border-radius: 16px; font-size: 22px; font-weight: bold; color: var(--secondary); cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 15px; font-family: inherit;}
+    .menu-btn i { width: 40px; height: 40px; color: var(--primary); transition: 0.3s; }
+    .menu-btn:hover { background: #F0FDF4; border-color: var(--primary); color: var(--primary-hover); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(16, 185, 129, 0.15); }
+    .menu-btn:hover i { transform: scale(1.1); }
+
+    /* AUDIO CONTROLS */
+    .audio-panel { display: flex; align-items: center; gap: 10px; background: #F1F5F9; padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; justify-content: center; flex-wrap: wrap; }
+    .passage-btn { display: inline-flex; align-items: center; gap: 6px; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.2s; }
+    .btn-play { background: #10B981; } .btn-play:hover { background: #059669; }
+    .btn-pause { background: #F59E0B; } .btn-pause:hover { background: #D97706; }
+    .btn-stop { background: #EF4444; } .btn-stop:hover { background: #DC2626; }
+    .btn-replay { background: #3B82F6; } .btn-replay:hover { background: #2563EB; }
+    .speed-select { padding: 8px 12px; border-radius: 8px; border: 1px solid #CBD5E1; font-family: inherit; font-size: 15px; cursor: pointer; outline: none; background: #fff; margin-right: auto;}
+
+    /* LIVE TEXT & DICTIONARY */
+    .app-layout { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 15px;}
+    .card { background: #fff; border-radius: 16px; padding: 20px; border: 2px solid #E2E8F0; }
+    .text-card { flex: 1.6; min-width: 320px; background: #FFF8F0; border-color: #FFE0B2; font-size: 24px; line-height: 2.2;}
+    .info-card { flex: 1; min-width: 250px; text-align: center; }
+    .word { cursor: default; padding: 2px 6px; border-radius: 6px; transition: 0.2s; }
+    .has-vocab { cursor: pointer; background: linear-gradient(180deg, #FFF7E8 0%, #FFE6BF 100%); box-shadow: 0 0 0 1px #F59E0B, 0 2px 8px rgba(245, 158, 11, 0.18); font-weight: 700; }
+    .has-vocab:hover { background: linear-gradient(180deg, #FFECCB 0%, #FFD48A 100%); box-shadow: 0 0 0 1px #EA580C, 0 4px 12px rgba(234, 88, 12, 0.22); transform: translateY(-2px); }
+    .verb-word { color: #C2410C; font-weight: 800; }
+    
+    .info-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; color: #2F4858; text-align: right; border-bottom: 2px dashed #CBD5E1; padding-bottom: 10px;}
+    .info-word { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+    .transliteration { font-size: 14px; color: #6b7280; font-style: italic; margin-bottom: 10px; }
+    .definition-card { margin-top: 8px; padding: 10px; border-radius: 12px; background: #FFF8F0; border: 1px solid #FFE0B2; }
+    .definition-value { font-size: 18px; color: #111827; font-weight: bold; }
+    .vocab-img-large { width: 80px; height: 80px; object-fit: contain; border-radius: 12px; margin: 0 auto 15px; display: block; }
+    .vocab-img-small { width: 50px; height: 50px; object-fit: contain; border-radius: 10px; margin: 0 auto 10px; display: block; }
+    .speak-btn { padding: 8px 16px; border-radius: 99px; background: #FF9800; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; border:none; font-weight:bold; font-family:inherit; margin-top: 10px; transition: 0.2s;}
+    .speak-btn:hover { background: #F57C00; transform: scale(1.05); }
+
+    .popup-card { position: absolute; background: #fff; border-radius: 14px; padding: 16px; box-shadow: 0 12px 28px rgba(0,0,0,.25); min-width: 220px; text-align: center; z-index: 9999; border: 2px solid var(--secondary);}
+    .popup-close { display: inline-block; font-size: 12px; color: #6b7280; cursor: pointer; margin-top: 12px; padding: 4px 12px; background: #f3f4f6; border-radius: 8px; }
+
+    /* FLASHCARDS */
+    .flashcard-container { perspective: 1000px; width: 300px; height: 350px; margin: 0 auto 20px; cursor: pointer; }
+    .flashcard { width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; position: relative; }
+    .flashcard.is-flipped { transform: rotateY(180deg); }
+    .flashcard-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); border: 4px solid var(--secondary); }
+    .flashcard-front { background: #FFF; color: var(--secondary); font-size: 48px; font-weight: 800; }
+    .flashcard-back { background: var(--secondary); color: white; transform: rotateY(180deg); font-size: 24px; }
+    .flashcard-back img { width: 100px; height: 100px; object-fit: contain; margin-bottom: 20px; background: white; padding: 10px; border-radius: 16px; }
+    .fc-nav { display: flex; justify-content: center; gap: 20px; }
+    .fc-btn { background: #E2E8F0; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-size: 18px; font-weight: bold; transition: 0.2s;}
+    .fc-btn:hover { background: #CBD5E1; }
+
+    /* LETTER RE-ORDERING */
+    .spell-progress { text-align: center; font-size: 18px; font-weight: bold; color: var(--secondary); margin-bottom: 10px; }
+    .letters-container { display: flex; justify-content: center; gap: 15px; margin: 30px 0; direction: ltr; flex-wrap: wrap;}
+    .letter-box { width: 60px; height: 60px; font-size: 32px; font-weight: bold; background: white; border: 3px solid var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 0 var(--primary-hover); transition: 0.1s; }
+    .letter-box:active { transform: translateY(4px); box-shadow: none; }
+    .answer-slots { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; min-height: 70px; direction: rtl; }
+    .slot { width: 60px; height: 60px; border-bottom: 4px dashed #CBD5E1; font-size: 32px; font-weight: bold; display: flex; align-items: center; justify-content: center; color: var(--secondary); }
+
+    /* FILL IN BLANKS */
+    .sentence-container { background: #F8FAFC; padding: 15px 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #E2E8F0; font-size: 20px; font-weight: bold; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .sentence-img { width: 50px; height: 50px; object-fit: contain; margin-left: 15px; border-radius: 8px; background: #fff; padding: 5px; border: 2px solid #E2E8F0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+    .blank-slot { display: inline-flex; min-width: 100px; height: 40px; border: 2px dashed #CBD5E1; border-radius: 8px; background: #FFF; align-items: center; justify-content: center; transition: 0.2s; vertical-align: middle; }
+    .blank-slot.correct { border-color: #10B981; background: #D1FAE5; border-style: solid; }
+    .word-bank { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 25px; background: #fff; padding: 20px; border-radius: 16px; border: 2px solid #E2E8F0; }
+    .fill-draggable { background: white; border: 2px solid var(--secondary); padding: 8px 20px; border-radius: 8px; cursor: grab; font-weight: bold; font-size: 18px; color: var(--secondary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: inline-block;}
+
+    /* SORTING */
+    .sort-zone { flex: 1; min-height: 180px; border: 3px dashed #CBD5E1; border-radius: 16px; padding: 15px; background: #F8FAFC; text-align: center; transition: background 0.2s;}
+    .draggable { background: white; border: 2px solid var(--secondary); padding: 8px 16px; border-radius: 8px; cursor: grab; font-weight: bold; display: inline-block; margin: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+    .dropped-items-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 15px; }
+    
+    /* CANVAS */
+    .canvas-wrapper { text-align: center; }
+    canvas { border: 3px solid #E2E8F0; border-radius: 16px; background: white; touch-action: none; max-width: 100%; }
+    .tools-panel { margin-top: 15px; display: flex; justify-content: center; gap: 10px; align-items: center; background: #F8FAFC; padding: 10px; border-radius: 12px; flex-wrap: wrap; }
+    .color-btn { width: 35px; height: 35px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; }
+    .color-btn.active { transform: scale(1.2); border-color: var(--text-dark); }
+    .tool-btn { padding: 8px 16px; border-radius: 8px; border: 2px solid #CBD5E1; background: #fff; cursor: pointer; font-family: inherit; font-weight: bold; }
+    .tool-btn.active { background: var(--secondary); color: white; border-color: var(--secondary); }
+
+    /* MATCHING GAME */
+    .match-board { position: relative; display: flex; justify-content: space-between; align-items: center; padding: 30px; background: #F8FAFC; border-radius: 16px; border: 2px solid #E2E8F0; min-height: 350px; user-select: none; touch-action: none; }
+    .match-col { display: flex; flex-direction: column; gap: 20px; z-index: 2; }
+    .match-item { background: #FFFFFF; border: 3px solid #CBD5E1; border-radius: 16px; padding: 15px 30px; font-size: 24px; font-weight: bold; color: var(--secondary); cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.2s; min-width: 130px; text-align: center; display: flex; align-items: center; justify-content: center; }
+    .match-left { cursor: grab; }
+    .match-left:active { cursor: grabbing; transform: scale(0.95); border-color: var(--secondary); }
+    .match-right { border-style: dashed; padding: 10px; width: 140px; height: 100px; display: flex; align-items: center; justify-content: center;}
+    .match-right img { max-width: 100%; max-height: 80px; object-fit: contain; pointer-events: none;}
+    .match-item.matched { border-color: #10B981 !important; background: #D1FAE5 !important; color: #065F46 !important; cursor: default !important; border-style: solid;}
+    
+    /* HOTSPOT STYLES */
+    .hotspot-container { position: relative; width: fit-content; max-width: 100%; margin: 0 auto; border: 4px solid #E2E8F0; border-radius: 16px; overflow: hidden; line-height: 0; }
+    .hotspot-img { width: 100%; height: auto; display: block; cursor: pointer; }
+    .hotspot { position: absolute; cursor: pointer; transform: translate(50%, -50%); z-index: 10; line-height: normal;}
+    .hotspot-circle { width: 34px; height: 34px; border: 4px solid var(--primary); border-radius: 50%; animation: hotspot-pulse 1.5s infinite; background: rgba(255,255,255,0.3);}
+    .hotspot.active .hotspot-circle { background: var(--primary); border-color: #fff; }
+    .hotspot-label { position: absolute; top: 45px; left: 50%; transform: translateX(-50%) translateY(10px); background: #fff; padding: 8px 16px; border-radius: 12px; font-weight: 800; font-size: 20px; color: var(--secondary); box-shadow: 0 8px 16px rgba(0,0,0,0.2); opacity: 0; visibility: hidden; transition: 0.3s; border: 3px solid var(--primary); white-space: nowrap; display:flex; align-items:center; gap:8px; }
+    .hotspot.active .hotspot-label { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+    @keyframes hotspot-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    /* MAZE GAME STYLES */
+    #maze-grid {
+        display: grid;
+        grid-template-columns: repeat(15, 1fr);
+        grid-template-rows: repeat(11, 1fr);
+        width: 100%;
+        max-width: 550px;
+        aspect-ratio: 15/11;
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(8px);
+        border: 4px solid #10B981; 
+        border-radius: 12px;
+        margin: 0 auto 20px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        direction: ltr;
+    }
+    .maze-wall { 
+        background: linear-gradient(135deg, #10B981, #6EE7B7); 
+        border-radius: 6px; 
+        margin: 1px; 
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    }
+    .maze-target {
+        background: white;
+        border: 3px solid var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        z-index: 5;
+        transform: scale(1.4);
+        transition: 0.3s;
+        padding: 3px;
+    }
+    .maze-target img { width: 100%; height: 100%; object-fit: contain; }
+    .maze-target.correct-flash { border-color: #10B981 !important; background: #D1FAE5 !important; transform: scale(1.7); box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+    .maze-target.wrong-flash { border-color: #EF4444 !important; background: #FEE2E2 !important; transform: scale(1.7); box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
+    
+    .maze-player { display: flex; align-items: center; justify-content: center; z-index: 10; transition: grid-area 0.1s, transform 0.2s; }
+    .maze-player-avatar { display:flex; flex-direction:column; align-items:center; justify-content:center; width:56px; height:56px; background:#ffffff; border:3px solid var(--secondary); border-radius:16px; box-shadow:0 8px 18px rgba(59,130,246,0.22); color:var(--secondary); transition: transform 0.15s; }
+    .maze-player-avatar i { width:22px; height:22px; }
+    .maze-player-avatar span { font-size:12px; font-weight:800; line-height:1; margin-top:3px; }
+
+    .maze-controls {
+        display: grid;
+        grid-template-columns: 60px 60px 60px;
+        grid-template-rows: 60px 60px;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 20px;
+        direction: ltr;
+    }
+    .maze-btn { background: #F1F5F9; border: 2px solid #CBD5E1; border-radius: 12px; cursor: pointer; display: flex; align-items:center; justify-content:center;}
+    .maze-btn i { width:28px; height:28px; }
+    .maze-btn:active { background: #E2E8F0; transform: scale(0.95); }
+    .maze-btn.up { grid-column: 2; grid-row: 1; }
+    .maze-btn.left { grid-column: 1; grid-row: 2; }
+    .maze-btn.down { grid-column: 2; grid-row: 2; }
+    .maze-btn.right { grid-column: 3; grid-row: 2; }
+
+    /* Footer Nav & End Slide */
+    .lms-footer { background: #F8FAFC; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #E2E8F0; }
+    .nav-btn { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 99px; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .nav-btn:hover { filter: brightness(0.9); transform: scale(1.02); }
+    .nav-btn:disabled { background: #CBD5E1; cursor: not-allowed; transform: none; }
+    .progress-dots { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .dot { width: 12px; height: 12px; background: #CBD5E1; border-radius: 50%; transition: 0.3s; }
+    .dot.active { background: var(--secondary); transform: scale(1.2); }
+    
+    .end-container { text-align: center; padding: 20px; }
+    .end-icon { width: 120px; height: 120px; color: #F59E0B; margin: 0 auto 10px; display: block; }
+    
+    .score-board { background: #F0FDF4; border: 3px solid #10B981; padding: 20px 40px; border-radius: 20px; display: inline-block; margin: 20px 0; box-shadow: 0 8px 16px rgba(16, 185, 129, 0.15); }
+    .score-board h3 { margin: 0; color: #065F46; font-size: 24px; }
+    .score-number { font-size: 48px; font-weight: 900; color: #10B981; margin-top: 5px; direction: ltr; display: inline-block;}
+
+    /* SETUP & CERTIFICATE STYLES */
+    .cert-input-wrapper { display: flex; justify-content: center; gap: 15px; margin: 30px 0; flex-wrap: wrap; align-items: center;}
+    .cert-input { padding: 12px 20px; font-size: 18px; border: 2px solid #CBD5E1; border-radius: 12px; font-family: inherit; width: 300px; text-align: center; outline: none; transition: 0.2s;}
+    .cert-input:focus { border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+    .cert-preview-scroll { width: 100%; overflow-x: auto; padding-bottom: 20px; margin-top: 10px;}
+    
+    .certificate {
+        width: 800px;
+        height: 560px;
+        min-width: 800px;
+        background-color: #fff;
+        background-image: url('https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/background.png');
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Almarai', sans-serif;
+        color: var(--text-dark);
+        border-radius: 0; 
+        border: 12px solid #E2E8F0;
+        box-sizing: border-box;
+        margin: 0 auto;
+    }
+    .cert-overlay {
+        background: rgba(255, 255, 255, 0.92);
+        width: 85%;
+        height: 85%;
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        text-align: center;
+        border: 3px dashed var(--secondary);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .cert-logo, .cert-user-photo { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 4px solid var(--primary); box-shadow: 0 6px 15px rgba(0,0,0,0.15); margin-bottom: 10px; background: white; }
+    .cert-logo { object-fit: contain; padding: 10px; }
+    
+    .cert-title { font-size: 46px; color: var(--secondary); font-weight: 900; margin: 0 0 10px 0; text-shadow: 1px 1px 0px #fff;}
+    .cert-subtitle { font-size: 24px; color: #64748B; margin: 10px 0 20px 0; font-weight: bold;}
+    .cert-name { font-size: 48px; color: var(--primary); font-weight: 900; border-bottom: 4px solid var(--primary); padding: 0 40px 10px; margin-bottom: 20px; min-width: 350px; min-height: 58px; display: inline-block;}
+    .cert-desc { font-size: 22px; font-weight: bold; margin-bottom: 25px; color: #334155;}
+    .cert-score-box { font-size: 28px; font-weight: 900; background: #F0FDF4; border: 3px solid #10B981; color: #065F46; padding: 10px 40px; border-radius: 99px; direction: ltr; display: inline-block;}
+
+    /* Start Profile Layout */
+    .profile-setup-box { background: white; padding: 40px; border-radius: 20px; border: 3px solid #E2E8F0; box-shadow: 0 10px 25px rgba(0,0,0,0.05); max-width: 500px; margin: 0 auto; text-align: center; }
+    .profile-img-preview { width: 150px; height: 150px; border-radius: 50%; border: 4px dashed var(--secondary); margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #F8FAFC; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .profile-img-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .btn-group { display: flex; justify-content: center; gap: 15px; margin-top: 20px; flex-wrap: wrap; }
+    .upload-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 12px; font-size: 16px; font-weight: bold; color: white; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .upload-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+    .btn-camera { background: var(--secondary); }
+    .btn-gallery { background: var(--primary); }
+
+  </style>
+</head>
+<body>
+
+  <div class="lms-container">
+    
+    <div class="header-container">
+      <h1>الصفات - Adjectives</h1>
+      <div class="brand-tag">Bubbles in Arabic - الأنشطة التفاعلية</div>
+    </div>
+
+    <div class="slide-container">
+
+      <div class="slide active" id="slide-0">
+        <h2 class="solo" style="text-align: center; border: none; font-size: 32px;">أهلاً بك يا بطل! 🌟</h2>
+        <p class="instruction" style="text-align: center; font-size: 20px;">أدخل اسمك وأضف صورتك لنبدأ اللعب ونصنع شهادتك الخاصة.</p>
+        
+        <div class="profile-setup-box">
+            <div class="profile-img-preview">
+                <img id="setup-preview-img" src="https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/tawil.png" alt="صورة الملف">
+            </div>
+            
+            <input type="text" id="globalStudentName" class="cert-input" placeholder="اكتب اسمك هنا..." oninput="updateGlobalData()">
+            
+            <div class="btn-group">
+                <label for="cameraUpload" class="upload-btn btn-camera">
+                    <i data-lucide="camera"></i> التقط صورة
+                </label>
+                <input type="file" id="cameraUpload" accept="image/*" capture="user" style="display: none;" onchange="handleGlobalPhoto(event)">
+
+                <label for="fileUpload" class="upload-btn btn-gallery">
+                    <i data-lucide="upload"></i> ارفع صورة
+                </label>
+                <input type="file" id="fileUpload" accept="image/*" style="display: none;" onchange="handleGlobalPhoto(event)">
+            </div>
+            
+            <button class="nav-btn" style="background: var(--text-dark); margin-top: 40px; font-size: 22px; padding: 15px 50px; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.2);" onclick="goToSlide(1)">🚀 ابدأ اللعب الآن</button>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-1">
+        <h2 class="solo" style="text-align: center; border: none;">القائمة الرئيسية</h2>
+        <p class="instruction" style="text-align: center;">اختر النشاط الذي ترغب في البدء به:</p>
+        
+        <div class="menu-grid">
+          <button class="menu-btn" onclick="goToSlide(2)"><i data-lucide="book-open"></i> استمع واقرأ</button>
+          <button class="menu-btn" onclick="goToSlide(3)"><i data-lucide="library"></i> البطاقات التعليمية</button>
+          <button class="menu-btn" onclick="goToSlide(4)"><i data-lucide="spell-check"></i> ترتيب الحروف</button>
+          <button class="menu-btn" onclick="goToSlide(5)"><i data-lucide="edit-3"></i> أكمل الفراغ</button>
+          <button class="menu-btn" onclick="goToSlide(6)"><i data-lucide="arrow-down-up"></i> الأسماء والصفات</button>
+          <button class="menu-btn" onclick="goToSlide(7)"><i data-lucide="palette"></i> لوّن المشهد</button>
+          <button class="menu-btn" onclick="goToSlide(8)"><i data-lucide="link"></i> صل الكلمة بالصورة</button>
+          <button class="menu-btn" onclick="goToSlide(9)"><i data-lucide="map-pin"></i> اكتشف الصورة</button>
+          <button class="menu-btn" onclick="goToSlide(10)"><i data-lucide="gamepad-2"></i> لعبة المتاهة</button>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-2">
+        <div class="slide-header">
+          <h2>أولاً: استمع واقرأ</h2>
+          <button class="back-menu-btn" onclick="goToFirstCard()"><i data-lucide="home" style="width:18px; height:18px;"></i> القائمة</button>
+        </div>
+        <p class="instruction">استمع للقصة كاملة، واضغط على الكلمات الملونة للتعرف على معناها بالإنجليزية.</p>
+        
+        <div class="audio-panel">
+          <span style="font-weight: bold; color: var(--text-dark);">التسجيل الصوتي:</span>
+          <button class="passage-btn btn-play" onclick="playPassage()"><i data-lucide="play" style="width:18px; height:18px;"></i> تشغيل</button>
+          <button class="passage-btn btn-pause" onclick="pausePassage()"><i data-lucide="pause" style="width:18px; height:18px;"></i> إيقاف مؤقت</button>
+          <button class="passage-btn btn-stop" onclick="stopPassage()"><i data-lucide="square" style="width:18px; height:18px;"></i> إيقاف</button>
+          <button class="passage-btn btn-replay" onclick="replayPassage()"><i data-lucide="rotate-ccw" style="width:18px; height:18px;"></i> إعادة</button>
+          
+          <div style="margin-right: auto; display: flex; align-items: center; gap: 10px;">
+              <label style="font-weight: bold; color: var(--text-dark);">السرعة:</label>
+              <select id="audioSpeed" class="speed-select" onchange="changeAudioSpeed(this.value)">
+                <option value="0.75">0.75x (بطيء)</option>
+                <option value="1" selected>1x (عادي)</option>
+                <option value="1.25">1.25x (سريع)</option>
+              </select>
+          </div>
+        </div>
+
+        <div class="app-layout">
+          <div class="card text-card" id="textContainer"></div>
+          
+          <div class="card info-card" id="infoCard">
+            <div class="info-title" id="infoTitleUi">معلومات الكلمة</div>
+            <div id="infoContent" style="margin-top:30px; color:#64748b;">اضغط على كلمة ملونة من النص.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-3">
+        <div class="slide-header">
+          <h2>ثانياً: البطاقات التعليمية</h2>
+          <button class="back-menu-btn" onclick="goToFirstCard()"><i data-lucide="home" style="width:18px; height:18px;"></i> القائمة</button>
+        </div>
+        <p class="instruction">اضغط على البطاقة لتعرف معنى الكلمة. (10 كلمات)</p>
+        
+        <div class="flashcard-container" onclick="flipCard(this)">
+          <div class="flashcard" id="fc-element">
+            <div class="flashcard-face flashcard-front" id="fc-front">طَوِيل</div>
+            <div class="flashcard-face flashcard-back">
+              <div id="fc-icon-container"></div>
+              <div id="fc-back" style="font-weight: bold; padding: 0 20px;">Tall / Long</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="fc-nav">
+          <button class="fc-btn" onclick="prevFlashcard()">السابق</button>
+          <span id="fc-counter" style="font-size: 18px; font-weight: bold; align-self: center;">1 / 10</span>
+          <button class="fc-btn" onclick="nextFlashcard()">التالي</button>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-4">
+        <div class="slide-header">
+          <h2>ثالثاً: ترتيب الحروف (12 نقطة)</h2>
+          <button class="back-menu-btn" onclick="goToFirstCard()"><i data-lucide="home" style="width:18px; height:18px;"></i> القائمة</button>
+        </div>
+        <div class="spell-progress" id="spell-progress">الكلمة 1 من 12</div>
+        <p class="instruction" id="spell-clue">اضغط على الحروف بالترتيب الصحيح لكتابة الكلمة.</p>
+        
+        <div class="answer-slots" id="letter-answer-box"></div>
+        <div class="letters-container" id="letter-source-box"></div>
+
+        <div style="text-align: center; margin-top: 20px;">
+          <button class="nav-btn" style="background: #EF4444; margin-left: 10px;" onclick="resetLetters(true)">مسح الحروف</button>
+          <button class="nav-btn" style="background: #F59E0B;" onclick="checkSpelling()">تحقق من الإجابة</button>
+        </div>
+        <div class="feedback" id="feedback-spell"></div>
+      </div>
+
+      <div class="slide" id="slide-5">
+        <div class="slide-header">
+          <h2>رابعاً: أكمل الفراغ (5 نقاط)</h2>
+          <button class="back-menu-btn" onclick="goToFirstCard()"><i data-lucide="home" style="width:18px; height:18px;"></i> القائمة</button>
+        </div>
+        <p class="instruction">اسحب الكلمة المناسبة لتكملة الجملة:</p>
+
+        <div class="word-bank" id="fill-word-bank">
+          <div class="fill-draggable" draggable="true" data-word="tawil">طَوِيل</div>
+          <div class="fill-draggable" draggable="true" data-word="jadeed">جَدِيد</div>
+          <div class="fill-draggable" draggable="true" data-word="batii">بَطِيء</div>
+          <div class="fill-draggable" draggable="true" data-word="sarii">سَرِيع</div>
+          <div class="fill-draggable" draggable="true" data-word="kadeem">قَدِيم</div>
+        </div>
+
+        <div class="sentence-container">
+          <img src="https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/bayt.svg" class="sentence-img" alt="بيت قديم">
+          <span>1. بَيْتُ جَدِّي</span>
+          <div class="blank-slot" data-target="kadeem"></div>
+          <span>.</span>
+        </div>
+        <div class="sentence-container">
+          <img src="https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/shoe.png" class="sentence-img" alt="حذاء جديد">
+          <span>2. اشْتَرَيْتُ حِذَاءً</span>
+          <div class="blank-slot" data-target="jadeed"></div>
+          <span>.</span>
+        </div>
+        <div class="sentence-container">
+          <img src="https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/tawil.png" class="sentence-img" alt="زرافة">
+          <span>3. الزَّرَافَةُ عُنُقُهَا</span>
+          <div class="blank-slot" data-target="tawil"></div>
+          <span>.</span>
+        </div>
+        <div class="sentence-container">
+          <img src="https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/batii.png" class="sentence-img" alt="سلحفاة">
+          <span>4. السُّلَحْفَاةُ تَمْشِي بِشَكْلٍ</span>
+          <div class="blank-slot" data-target="batii"></div>
+          <span>.</span>
+        </div>
+        <div class="sentence-container">
+          <img src="https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/leopord.png" class="sentence-img" alt="فهد">
+          <span>5. الْفَهْدُ حَيَوَانٌ</span>
+          <div class="blank-slot" data-target="sarii"></div>
+          <span>.</span>
+        </div>
+        
+        <div class="feedback" id="feedback-fill"></div>
+      </div>
+
+      <div class="slide" id="slide-6">
+        <div class="slide-header">
+          <h2>خامساً: الأسماء والصفات (10 نقاط)</h2>
+          <button class="back-menu-btn" onclick="goToFirstCard()"><i data-lucide="home" style="width:18px; height:18px;"></i> القائمة</button>
+        </div>
+        <p class="instruction">اسحب 5 أسماء و 5 صفات إلى الصندوق الصحيح:</p>
+        
+        <div id="drag-source-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 12px; border: 2px solid #E2E8F0;">
+          <div class="draggable" draggable="true" data-type="adjective">طَوِيل</div>
+          <div class="draggable" draggable="true" data-type="noun">زَرَافَة</div>
+          <div class="draggable" draggable="true" data-type="noun">أَرْنَب</div>
+          <div class="draggable" draggable="true" data-type="adjective">سَرِيع</div>
+          <div class="draggable" draggable="true" data-type="noun">حُوت</div>
+          <div class="draggable" draggable="true" data-type="adjective">بَطِيء</div>
+          <div class="draggable" draggable="true" data-type="noun">سُلَحْفَاة</div>
+          <div class="draggable" draggable="true" data-type="adjective">قَوِيّ</div>
+          <div class="draggable" draggable="true" data-type="noun">أَسَد</div>
+          <div class="draggable" draggable="true" data-type="adjective">ثَقِيل</div>
+        </div>
+
+        <div style="display: flex; gap: 20px;">
+          <div class="sort-zone" data-target="noun">
+            <h3>الأسماء (Nouns)</h3>
+            <div class="dropped-items-container" id="zone-noun-items"></div>
+          </div>
+          <div class="sort-zone" data-target="adjective">
+            <h3>الصفات (Adjectives)</h3>
+            <div class="dropped-items-container" id="zone-adjective-items"></div>
+          </div>
+        </div>
+        <div class="feedback" id="feedback-sort"></div>
+      </div>
+
+      <div class="slide" id="slide-7">
+        <div class="slide-header">
+          <h2>سادساً: لوّن المشهد</h2>
+          <button class="back-menu-btn" onclick="goToFirstCard()"><i data-lucide="home" style="width:18px; height:18px;"></i> القائمة</button>
+        </div>
+        <p class="instruction">استخدم الفرشاة للرسم، أو أداة التعبئة (الدلو).</p>
+        
+        <div class="canvas-wrapper">
+          <canvas id="paintCanvas" width="600" height="350"></canvas>
+          
+          <div class="tools-panel">
+            <button class="tool-btn active" id="tool-brush" onclick="setTool('brush')">🖌️ فرشاة</button>
+            <button class="tool-btn" id="tool-fill" onclick="setTool('fill')">🪣 تعبئة</button>
+            <button class="tool-btn" style="background:#EF4444; color:white; border-color:#EF4444;" onclick="clearCanvas()">مسح</button>
+          </div>
+
+          <div class="tools-panel" style="margin-top: 5px;">
+            <div class="color-btn active" style="background: #1E293B;" onclick="setColor(this, '#1E293B')"></div> 
+            <div class="color-btn" style="background: #FFFFFF;" onclick="setColor(this, '#FFFFFF')"></div> 
+            <div class="color-btn" style="background: #EF4444;" onclick="setColor(this, '#EF4444')"></div> 
+            <div class="color-btn" style="background: #F59E0B;" onclick="setColor(this, '#F59E0B')"></div> 
+            <div class="color-btn" style="background: #FCD34D;" onclick="setColor(this, '#FCD34D')"></div> 
+            <div class="color-btn" style="background: #10B981;" onclick="setColor(this, '#10B981')"></div> 
+            <div class="color-btn" style="background: #00BFFF;" onclick="setColor(this, '#00BFFF')"></div> 
+            <div class="color-btn" style="background: #3B82F6;" onclick="setColor(this, '#3B82F6')"></div> 
+            <div class="color-btn" style="background: #8B5CF6;" onclick="setColor(this, '#8B5CF6')"></div> 
+            <div class="color-btn" style="background: #FF1493;" onclick="setColor(this, '#FF1493')"></div> 
+            <div class="color-btn" style="background: #8B4513;" onclick="setColor(this, '#8B4513')"></div> 
+          </div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-8">
+        <div class="slide-header">
+          <h2>سابعاً: صل الكلمة بالصورة (6 نقاط)</h2>
+          <button class="back-menu-btn" onclick="goToFirstCard()"><i data-lucide="home" style="width:18px; height:18px;"></i> القائمة</button>
+        </div>
+        <p class="instruction">اسحب خطاً من الصفة إلى الصورة المناسبة لها.</p>
+        
+        <div class="match-board" id="matchBoard">
+            <svg id="matchSvg" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></svg>
+            
+            <div class="match-col">
+                <div class="match-item match-left" data-match="sarii">سَرِيع</div>
+                <div class="match-item match-left" data-match="tawil">طَوِيل</div>
+                <div class="match-item match-left" data-match="thakil">ثَقِيل</div>
+                <div class="match-item match-left" data-match="batii">بَطِيء</div>
+                <div class="match-item match-left" data-match="jadeed">جَدِيد</div>
+                <div class="match-item match-left" data-match="kadeem">قَدِيم</div>
+            </div>
+            
+            <div class="match-col">
+                <div class="match-item match-right" data-match="tawil"><img src="https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/tawil.png" alt="طويل"></div>
+                <div class="match-item match-right" data-match="kadeem"><img src="https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/kadeem.png" alt="قديم"></div>
+                <div class="match-item match-right" data-match="batii"><img src="https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/batii.png" alt="بطيء"></div>
+                <div class="match-item match-right" data-match="jadeed"><img src="https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/jadeed.png" alt="جديد"></div>
+                <div class="match-item match-right" data-match="sarii"><img src="https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/sarii.png" alt="سريع"></div>
+                <div class="match-item match-right" data-match="thakil"><img src="https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/hout.svg" alt="ثقيل"></div>
+            </div>
+        </div>
+        <div class="feedback" id="feedback-match"></div>
+      </div>
+
+      <div class="slide" id="slide-9">
+          <div class="slide-header">
+              <h2>ثامناً: اكتشف الصورة</h2>
+              <button class="back-menu-btn" onclick="goToFirstCard()"><i data-lucide="home"></i> القائمة</button>
+          </div>
+          <p class="instruction">اضغط على النقاط النابضة لاكتشاف العناصر في الصورة.</p>
+          
+          <div class="hotspot-container">
+            <img src="https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/hotspot-animals.png" alt="Scene" class="hotspot-img" id="finderImg" style="pointer-events: auto;">
+            
+            
+            <div class="hotspot" data-word="طويل" style="top: 41.6%; left: 17.8%;">
+              <div class="hotspot-circle"></div>
+              <div class="hotspot-label"><i data-lucide="volume-2" style="width:18px; height:18px;"></i><span>طَوِيل</span></div>
+            </div>
+
+            <div class="hotspot" data-word="خفيف" style="top: 19.2%; left: 34.3%;">
+              <div class="hotspot-circle"></div>
+              <div class="hotspot-label"><i data-lucide="volume-2" style="width:18px; height:18px;"></i><span>خفيف</span></div>
+
+            </div>
+            <div class="hotspot" data-word="ثقيل" style="top: 86.8%; left: 73.1%;">
+              <div class="hotspot-circle"></div>
+              <div class="hotspot-label"><i data-lucide="volume-2" style="width:18px; height:18px;"></i><span>ثقيل</span></div>
+            </div> 
+
+<div class="hotspot" data-word="قديم" style="top: 85.9%; left: 58.4%;">
+              <div class="hotspot-circle"></div>
+              <div class="hotspot-label"><i data-lucide="volume-2" style="width:18px; height:18px;"></i><span>قديم</span></div>
+            </div>
+<div class="hotspot" data-word="جديد" style="top: 88.3%; left: 46.5%;">
+              <div class="hotspot-circle"></div>
+              <div class="hotspot-label"><i data-lucide="volume-2" style="width:18px; height:18px;"></i><span>جديد</span></div>
+            </div>
+<div class="hotspot" data-word="ضعيف" style="top: 69.9%; left: 52.6%;">
+              <div class="hotspot-circle"></div>
+              <div class="hotspot-label"><i data-lucide="volume-2" style="width:18px; height:18px;"></i><span>ضعيف</span></div>
+            </div>
+<div class="hotspot" data-word="قوي" style="top: 65.3%; left: 34.4%;">
+              <div class="hotspot-circle"></div>
+              <div class="hotspot-label"><i data-lucide="volume-2" style="width:18px; height:18px;"></i><span>قوي</span></div>
+            </div>
+<div class="hotspot" data-word="بطيء" style="top: 84.1%; left: 33.7%;">
+              <div class="hotspot-circle"></div>
+              <div class="hotspot-label"><i data-lucide="volume-2" style="width:18px; height:18px;"></i><span>بطيء</span></div>
+            </div>
+            <div class="hotspot" data-word="سريع" style="top: 72.4%; left: 80.6%;">
+              <div class="hotspot-circle"></div>
+              <div class="hotspot-label"><i data-lucide="volume-2" style="width:18px; height:18px;"></i><span>سريع</span></div>
+            </div>
+<div class="hotspot" data-word="قصير" style="top: 78.2%; left: 4.6%;">
+              <div class="hotspot-circle"></div>
+              <div class="hotspot-label"><i data-lucide="volume-2" style="width:18px; height:18px;"></i><span>قصير</span></div>
+            </div>
+          </div>
+      </div>
+
+      <div class="slide" id="slide-10">
+          <div class="slide-header">
+              <h2>تاسعاً: لعبة المتاهة (12 نقطة)</h2>
+              <button class="back-menu-btn" onclick="goToFirstCard()"><i data-lucide="home"></i> القائمة</button>
+          </div>
+          <p class="instruction" style="text-align: center;">قُد بطاقة الصفة للوصول إلى الصورة الصحيحة التي تعبر عن الصفة المكتوبة!</p>
+          
+          <div style="text-align: center; margin-bottom: 10px;">
+              <h3 id="maze-header-title" style="color: var(--secondary); margin-bottom: 5px;">السؤال 1 من 12: اذهب إلى الصورة المناسبة</h3>
+              <h2 id="maze-question-text" style="font-size: 36px; color: var(--primary); font-weight: 900; margin: 10px 0; text-shadow: 1px 1px 0px #fff;">طَوِيل</h2>
+          </div>
+
+          <div id="maze-grid">
+              </div>
+
+          <div class="maze-controls">
+              <button class="maze-btn up" onclick="moveMazePlayer(-1, 0)" aria-label="أعلى"><i data-lucide="arrow-up"></i></button>
+              <button class="maze-btn left" onclick="moveMazePlayer(0, -1)" aria-label="يسار"><i data-lucide="arrow-left"></i></button>
+              <button class="maze-btn down" onclick="moveMazePlayer(1, 0)" aria-label="أسفل"><i data-lucide="arrow-down"></i></button>
+              <button class="maze-btn right" onclick="moveMazePlayer(0, 1)" aria-label="يمين"><i data-lucide="arrow-right"></i></button>
+          </div>
+      </div>
+
+      <div class="slide" id="slide-11">
+        <div class="end-container">
+          <h2>عمل رائع يا بطل!</h2>
+          <i data-lucide="award" class="end-icon"></i>
+          
+          <div class="score-board">
+            <h3>نتيجتك النهائية</h3>
+            <div class="score-number" id="final-score-text">0 / 45</div>
+          </div>
+          
+          <p class="instruction" style="font-size: 22px;">لقد أكملت الأنشطة بنجاح. هديتك جاهزة الآن!</p>
+          
+          <div style="text-align: center; margin-bottom: 20px;">
+             <button class="nav-btn" id="downloadCertBtn" style="background: #8B5CF6; font-size: 20px; padding: 15px 40px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);" onclick="downloadCertificate()">📥 تحميل شهادة التميز</button>
+          </div>
+
+          <div class="cert-preview-scroll">
+              <div id="certificateArea" class="certificate">
+                  <div class="cert-overlay">
+                      <img src="https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/tawil.png" alt="Icon" class="cert-logo" id="certDefaultLogo">
+                      <img src="" alt="User Photo" class="cert-user-photo" id="certUserPhotoDisplay" style="display: none;">
+                      
+                      <div class="cert-title">شَهَادَةُ إِتْمَام</div>
+                      <div class="cert-subtitle">تُمنح هذه الشهادة بكل فخر إلى</div>
+                      <div class="cert-name" id="certNameDisplay">اسم الطالب</div>
+                      <div class="cert-desc">لإتمامه/ا أنشطة درس "الصفات" بنجاح وتميز.</div>
+                      <div class="cert-score-box">النتيجة: <span id="certScoreDisplay">0 / 45</span></div>
+                  </div>
+              </div>
+          </div>
+          
+          <div style="display: flex; justify-content: center; gap: 20px; margin-top: 30px; flex-wrap: wrap;">
+            <button class="nav-btn" style="background: var(--secondary); font-size: 18px; padding: 15px 30px;" onclick="goToFirstCard()">🔄 القائمة الرئيسية</button>
+            <button class="nav-btn" style="background: var(--primary); font-size: 18px; padding: 15px 30px;" onclick="continueLesson()">📚 متابعة التعلم</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="lms-footer" id="main-footer">
+      <button class="nav-btn" id="btn-prev" onclick="changeSlide(-1)" disabled>السابق</button>
+      <div class="progress-dots" id="dots-container"></div>
+      <button class="nav-btn" id="btn-next" onclick="changeSlide(1)">التالي</button>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const GITHUB_BASE = "https://raw.githubusercontent.com/bubblesinarabic/bubblesinarabic-images/main/";
+    const popAudio = new Audio(GITHUB_BASE + "pop2.mov");
+    const successAudio = new Audio(GITHUB_BASE + "ahsant.mp3");
+    const errorAudio = new Audio(GITHUB_BASE + "hawelmaraokhra.mp3");
+
+    function playSound(audioElement) {
+        const soundClone = audioElement.cloneNode();
+        soundClone.play().catch(e => console.log("Audio play prevented:", e));
+    }
+
+    function playPop() { playSound(popAudio); }
+    function playSuccess() { playSound(successAudio); }
+    function playError() { playSound(errorAudio); }
+
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length; 
+    const dotsContainer = document.getElementById('dots-container');
+    const footer = document.getElementById('main-footer');
+    let correctlySorted = 0; let currentSpellLevel = 0; let matchScore = 0; let mazeScore = 0;
+
+    for(let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('div');
+      dot.className = i === 0 ? 'dot active' : 'dot';
+      dotsContainer.appendChild(dot);
+    }
+    const dots = document.querySelectorAll('.dot');
+
+    function calculateFinalScore() {
+      const fillScore = document.querySelectorAll('.blank-slot.correct').length;
+      const spellingScore = Math.min(currentSpellLevel, 12); 
+      const totalScore = fillScore + spellingScore + correctlySorted + matchScore + mazeScore;
+      document.getElementById('final-score-text').textContent = totalScore + " / 45";
+      document.getElementById('certScoreDisplay').textContent = totalScore + " / 45";
+    }
+
+    function updateNavUI() {
+      // Hide footer on Profile Setup (0) and End Certificate (11)
+      if (currentSlide === 0 || currentSlide === totalSlides - 1) {
+        footer.style.display = 'none';
+      } else {
+        footer.style.display = 'flex';
+        // Disable back button on Main Menu (1)
+        document.getElementById('btn-prev').disabled = currentSlide <= 1; 
+      }
+      if (currentSlide === totalSlides - 1) { calculateFinalScore(); playSuccess(); }
+    }
+    updateNavUI();
+
+    function changeSlide(direction) {
+      playPop(); pausePassage();
+      if(isMazeActive) stopMaze();
+      slides[currentSlide].classList.remove('active');
+      dots[currentSlide].classList.remove('active');
+      currentSlide += direction;
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+      updateNavUI();
+      if(currentSlide === 10) startMaze(); // Index 10 is Maze
+    }
+
+    function goToSlide(targetIndex) {
+      playPop(); pausePassage();
+      if(isMazeActive) stopMaze();
+      slides[currentSlide].classList.remove('active');
+      dots[currentSlide].classList.remove('active');
+      currentSlide = targetIndex;
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+      updateNavUI();
+      if(currentSlide === 10) startMaze(); // Index 10 is Maze
+    }
+    
+    function goToFirstCard() { goToSlide(1); } // 1 is Main Menu
+    function continueLesson() { playPop(); alert("سيتم نقلك إلى الدرس التالي في المنصة التعليمية."); }
+
+    // --- Profile & Certificate Data ---
+    function updateGlobalData() {
+        let name = document.getElementById('globalStudentName').value;
+        document.getElementById('certNameDisplay').innerText = name || "اسم الطالب";
+    }
+
+    function handleGlobalPhoto(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgUrl = e.target.result;
+                
+                // Update Setup Screen Preview
+                document.getElementById('setup-preview-img').src = imgUrl;
+                
+                // Update Certificate Display
+                const photoDisplay = document.getElementById('certUserPhotoDisplay');
+                const defaultLogo = document.getElementById('certDefaultLogo');
+                photoDisplay.src = imgUrl;
+                photoDisplay.style.display = 'block';
+                defaultLogo.style.display = 'none';
+                
+                playPop();
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function downloadCertificate() {
+        playPop();
+        const certArea = document.getElementById('certificateArea');
+        const btn = document.getElementById('downloadCertBtn');
+        const oldText = btn.innerHTML;
+        
+        let studentName = document.getElementById('globalStudentName').value.trim() || 'الطالب';
+        let safeName = studentName.replace(/\s+/g, '-');
+        
+        btn.innerHTML = "⏳ جاري الإصدار...";
+        btn.disabled = true;
+
+        html2canvas(certArea, { 
+            useCORS: true, 
+            scale: 2,
+            backgroundColor: null 
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `شهادة-${safeName}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            btn.innerHTML = oldText;
+            btn.disabled = false;
+        }).catch(err => {
+            console.error("Error generating certificate:", err);
+            btn.innerHTML = oldText;
+            btn.disabled = false;
+            alert("حدث خطأ أثناء تحميل الشهادة. يرجى المحاولة مرة أخرى.");
+        });
+    }
+
+    // --- LIVE TEXT & DICTIONARY ---
+    let storyAudio = new Audio(GITHUB_BASE + "alsifat.mp3");
+    let wordAudio = new Audio();
+    
+    function playPassage() { playPop(); storyAudio.play(); }
+    function pausePassage() { playPop(); storyAudio.pause(); }
+    function stopPassage() { playPop(); storyAudio.pause(); storyAudio.currentTime = 0; }
+    function replayPassage() { playPop(); storyAudio.currentTime = 0; storyAudio.play(); }
+
+    function changeAudioSpeed(speed) { 
+        storyAudio.playbackRate = parseFloat(speed); 
+        wordAudio.playbackRate = parseFloat(speed); 
+        playPop(); 
+    }
+
+    const vocabDict = {
+      "طويل": { type:"adjective", base:"طويل", textToSpeak:"طَوِيل", meaning:"Tall / Long", transliteration:"Tawil", img: GITHUB_BASE+"tawil.png", color:"#FF1493", bg:"#ffe1f0", audioUrl: GITHUB_BASE+"tawil.mp3" },
+      "قصير": { type:"adjective", base:"قصير", textToSpeak:"قَصِير", meaning:"Short", transliteration:"Kassir", img: GITHUB_BASE+"kassir.png", color:"#FF4500", bg:"#ffece5", audioUrl: GITHUB_BASE+"kassir.mp3" },
+      "سريع": { type:"adjective", base:"سريع", textToSpeak:"سَرِيع", meaning:"Fast", transliteration:"Saree'", img: GITHUB_BASE+"sarii.png", color:"#FF4500", bg:"#ffece5", audioUrl: GITHUB_BASE+"sarii.mp3" },
+      "بطيء": { type:"adjective", base:"بطيء", textToSpeak:"بَطِيء", meaning:"Slow", transliteration:"Batee'", img: GITHUB_BASE+"batii.png", color:"#607D8B", bg:"#eef2f5", audioUrl: GITHUB_BASE+"batii.mp3" },
+      "ثقيل": { type:"adjective", base:"ثقيل", textToSpeak:"ثَقِيل", meaning:"Heavy", transliteration:"Thaqeel", img: GITHUB_BASE+"hout.svg", color:"#4B0082", bg:"#e9e5ff", audioUrl: GITHUB_BASE+"thakil.mp3" },
+      "خفيف": { type:"adjective", base:"خفيف", textToSpeak:"خَفِيف", meaning:"Light (weight)", transliteration:"Khafeef", img: GITHUB_BASE+"khafif.png", color:"#FFD700", bg:"#fffbe5", audioUrl: GITHUB_BASE+"khafif.mp3" },
+      "قوي": { type:"adjective", base:"قوي", textToSpeak:"قَوِيّ", meaning:"Strong", transliteration:"Qawi", img: GITHUB_BASE+"kawi.png", color:"#E65100", bg:"#fff0e5", audioUrl: GITHUB_BASE+"kawi.mp3" },
+      "ضعيف": { type:"adjective", base:"ضعيف", textToSpeak:"ضَعِيف", meaning:"Weak", transliteration:"Daiif", img: GITHUB_BASE+"daiif.png", color:"#E65100", bg:"#fff0e5", audioUrl: GITHUB_BASE+"daiif.mp3" },
+      "كبيرة": { type:"adjective", base:"كبيرة", textToSpeak:"كَبِيرَة", meaning:"Big", transliteration:"Kabeerah", color:"#E65100", bg:"#fff0e5", icon:"maximize", audioUrl: GITHUB_BASE+"kabeer.mp3" },
+      "صغير": { type:"adjective", base:"صغير", textToSpeak:"صَغِير", meaning:"Small", transliteration:"Sagheer", color:"#E65100", bg:"#fff0e5", icon:"minimize", audioUrl: GITHUB_BASE+"sagheer.mp3" },
+      "قديم": { type:"adjective", base:"قديم", textToSpeak:"قَدِيم", meaning:"Old", transliteration:"Qadeem", img: GITHUB_BASE+"kadeem.png", color:"#8B4513", bg:"#f5ebd9", audioUrl: GITHUB_BASE+"kadeem.mp3" },
+      "جديد": { type:"adjective", base:"جديد", textToSpeak:"جَدِيد", meaning:"New", transliteration:"Jadeed", img: GITHUB_BASE+"jadeed.png", color:"#10B981", bg:"#d1fae5", audioUrl: GITHUB_BASE+"jadeed.mp3" }
+    };
+
+    const aliases = [
+      ["طويلُ", "طويل"], ["سَرِيعٌ", "سريع"], ["ثَقِيلُ", "ثقيل"], ["بَطِيءٍ", "بطيء"],
+      ["قَوِيٌّ", "قوي"], ["كَبِيرَةُ", "كبيرة"], ["صَغِيرٌ", "صغير"], ["خَفِيفةُ", "خفيف"],
+      ["خَفِيفَةُ", "خفيف"], ["خَفيف", "خفيف"], ["ثَقِيل", "ثقيل"], ["بَطِيئَة", "بطيء"],
+      ["سريعة", "سريع"]
+    ];
+
+    function stripPunctuation(t) { return (t || "").replace(/[.,!?؟؛:"'«»()\[\]-]/g, ""); }
+    function normalizeToken(raw) {
+      let t = stripPunctuation(raw).toLowerCase();
+      return t.replace(/[\u064B-\u0652\u0670\u0640]/g, "").replace(/[أإآ]/g, "ا").replace(/ة/g, "ه").replace(/^([وفبك])?(ال)?/, "");
+    }
+
+    const activeVocabDictionary = { ...vocabDict };
+    aliases.forEach(([word, target]) => {
+      const k = normalizeToken(word);
+      if (activeVocabDictionary[target] && !activeVocabDictionary[k]) {
+        activeVocabDictionary[k] = { alias: target };
+      }
+    });
+
+    const textParagraphs = [
+      "الزرافة حيوان طويل الرقبة.",
+      "الأرنب سريع ويقفز بسرعة.",
+      "الحوت حيوان ثقيل الحجم.",
+      "السلحفاة تسير بشكل بطيء.",
+      "الأسد حيوان قوي وشجاع.",
+      "السمكة خفيفة الوزن لأنها تعيش في الماء.",
+      "الشجرة كبيرة الحجم وتعطي ظلا.",
+      "النملة مخلوق صغير جدا.",
+      "بيت جدي قديم وجميل.",
+      "اشتريت حذاء جديد للرياضة."
+    ];
+
+    const textContainer = document.getElementById("textContainer");
+    const infoContent = document.getElementById("infoContent");
+    let popup = null;
+
+    function resolveEntry(normKey) {
+      const e = activeVocabDictionary[normKey];
+      if (!e) return null;
+      return e.alias ? activeVocabDictionary[e.alias] : e;
+    }
+
+    textParagraphs.forEach((par) => {
+      const p = document.createElement("p");
+      p.style.margin = "0 0 10px 0";
+      par.trim().split(/\s+/).forEach(rawToken => {
+        let matchToken = rawToken;
+        const candidates = [ rawToken, stripPunctuation(rawToken), stripPunctuation(rawToken).replace(/^[وفبكل]?/, ""), stripPunctuation(rawToken).replace(/^([وفبكل])?(ال)?/, "") ];
+        const matched = candidates.find(candidate => resolveEntry(normalizeToken(candidate)));
+        if (matched) matchToken = matched;
+
+        const cleanToken = normalizeToken(matchToken);
+        const span = document.createElement("span");
+        span.className = "word";
+        span.textContent = rawToken;
+
+        const entry = resolveEntry(cleanToken);
+        if (entry) {
+          span.dataset.key = cleanToken;
+          span.classList.add("has-vocab");
+          if (entry.type === "verb") span.classList.add("verb-word");
+        }
+        p.appendChild(span); p.appendChild(document.createTextNode(" "));
+      });
+      textContainer.appendChild(p);
+    });
+
+    function speakArabicFallback(text) {
+        if (!('speechSynthesis' in window) || !text) return;
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ar-SA';
+        utterance.rate = parseFloat(document.getElementById('audioSpeed')?.value || '1');
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function playWordAudio(entry, fallbackText = '') {
+        wordAudio.pause();
+        if (entry?.audioUrl) {
+            wordAudio.src = entry.audioUrl;
+            wordAudio.load();
+            wordAudio.onended = null;
+            wordAudio.onerror = () => {
+                console.error("Audio playback failed for:", entry.base || fallbackText);
+                speakArabicFallback(entry.textToSpeak || entry.base || fallbackText);
+            };
+            wordAudio.play().catch(e => {
+                console.error("Audio playback failed:", e);
+                speakArabicFallback(entry.textToSpeak || entry.base || fallbackText);
+            });
+            return;
+        }
+        speakArabicFallback(fallbackText || entry?.textToSpeak || entry?.base || '');
+    }
+
+    function showInfoAndPopup(entry, anchor) {
+      playPop();
+      const visualContent = entry.img ? `<img src="${entry.img}" class="vocab-img-large" alt="${entry.base}">` : `<i data-lucide="${entry.icon}" style="width:56px; height:56px; stroke:${entry.color}; stroke-width:2.5;"></i>`;
+      
+      infoContent.innerHTML = `
+        <div style="background:${entry.bg}; display:flex; justify-content:center; align-items:center; border-radius:12px; padding:15px; margin-bottom:15px;">${visualContent}</div>
+        <div class="info-word">${entry.base}</div>
+        <div class="transliteration">${entry.transliteration}</div>
+        <div class="definition-card"><div class="definition-value">${entry.meaning}</div></div>
+        <button class="speak-btn" id="sidePlayBtn"><i data-lucide="volume-2" style="width:18px; height:18px;"></i> استمع للكلمة</button>
+      `;
+      lucide.createIcons({root: infoContent});
+      document.getElementById("sidePlayBtn").onclick = () => playWordAudio(entry);
+
+      if (popup) popup.remove();
+      const popupVisual = entry.img ? `<img src="${entry.img}" class="vocab-img-small" alt="${entry.base}">` : `<i data-lucide="${entry.icon}" style="width:40px; height:40px; stroke:${entry.color}; stroke-width:2.5; margin:0 auto 10px; display:block;"></i>`;
+      
+      popup = document.createElement("div");
+      popup.className = "popup-card";
+      popup.innerHTML = `
+        <div style="background:${entry.bg}; padding:10px; border-radius:12px; margin-bottom:10px;">${popupVisual}</div>
+        <div class="info-word" style="font-size: 20px;">${entry.base}</div>
+        <div class="transliteration">${entry.transliteration}</div>
+        <div class="definition-card"><div class="definition-value" style="font-size: 16px;">${entry.meaning}</div></div>
+        <button class="speak-btn" id="popupPlayBtn"><i data-lucide="volume-2" style="width:16px; height:16px;"></i> استمع</button>
+        <br><div class="popup-close">إغلاق ✕</div>
+      `;
+      document.body.appendChild(popup);
+      lucide.createIcons({root: popup});
+      
+      const r = anchor.getBoundingClientRect();
+      popup.style.top = (r.top + window.scrollY - popup.offsetHeight - 15) + "px";
+      popup.style.left = Math.max(10, Math.min(window.innerWidth - popup.offsetWidth - 10, r.left)) + "px";
+      
+      popup.querySelector(".popup-close").onclick = () => popup.remove();
+      document.getElementById("popupPlayBtn").onclick = () => playWordAudio(entry);
+    }
+
+    textContainer.addEventListener("click", (e) => {
+      const span = e.target.closest(".word");
+      if (!span?.dataset.key) return;
+      const entry = resolveEntry(span.dataset.key);
+      if (entry) showInfoAndPopup(entry, span);
+    });
+
+    // --- FLASHCARDS ---
+    const flashcardsData = [
+      { word: "طَوِيل", meaning: "Tall / Long", img: "tawil.png" },
+      { word: "قَصِير", meaning: "Short", img: "kassir.png" },
+      { word: "سَرِيع", meaning: "Fast", img: "sarii.png" },
+      { word: "بَطِيء", meaning: "Slow", img: "batii.png" },
+      { word: "قَوِيّ", meaning: "Strong", img: "kawi.png" },
+      { word: "ضَعِيف", meaning: "Weak", img: "daiif.png" },
+      { word: "ثَقِيل", meaning: "Heavy", img: "hout.svg" },
+      { word: "خَفِيف", meaning: "Light", img: "khafif.png" },
+      { word: "قَدِيم", meaning: "Old", img: "kadeem.png" },
+      { word: "جَدِيد", meaning: "New", img: "jadeed.png" }
+    ];
+    let fcIndex = 0;
+    function flipCard(el) { playPop(); el.querySelector('.flashcard').classList.toggle('is-flipped'); }
+    function updateFlashcard() {
+      const card = document.querySelector('.flashcard');
+      card.classList.remove('is-flipped');
+      setTimeout(() => {
+        document.getElementById('fc-front').textContent = flashcardsData[fcIndex].word;
+        document.getElementById('fc-back').textContent = flashcardsData[fcIndex].meaning;
+        const iconContainer = document.getElementById('fc-icon-container');
+        iconContainer.innerHTML = '';
+        const newImg = document.createElement('img');
+        newImg.src = GITHUB_BASE + flashcardsData[fcIndex].img;
+        iconContainer.appendChild(newImg);
+        document.getElementById('fc-counter').textContent = `${fcIndex + 1} / 10`;
+      }, 200);
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById('fc-icon-container').innerHTML = `<img src="${GITHUB_BASE}tawil.png">`;
+        initMazeBoard(); // Prepare Maze Game Grid
+        lucide.createIcons();
+    });
+    
+    function nextFlashcard() { playPop(); fcIndex = (fcIndex + 1) % 10; updateFlashcard(); }
+    function prevFlashcard() { playPop(); fcIndex = (fcIndex - 1 + 10) % 10; updateFlashcard(); }
+
+    // --- SPELLING ---
+    const spellingLevels = [
+      { target: "طويل", clue: "Tall / Long", letters: ["ل", "ي", "و", "ط"] },
+      { target: "قصير", clue: "Short", letters: ["ر", "ي", "ص", "ق"] },
+      { target: "سريع", clue: "Fast", letters: ["ع", "ي", "ر", "س"] },
+      { target: "بطيء", clue: "Slow", letters: ["ء", "ي", "ط", "ب"] },
+      { target: "قوي", clue: "Strong", letters: ["ي", "و", "ق"] },
+      { target: "ضعيف", clue: "Weak", letters: ["ف", "ي", "ع", "ض"] },
+      { target: "ثقيل", clue: "Heavy", letters: ["ل", "ي", "ق", "ث"] },
+      { target: "خفيف", clue: "Light", letters: ["ف", "ي", "ف", "خ"] },
+      { target: "كبير", clue: "Big", letters: ["ر", "ي", "ب", "ك"] },
+      { target: "صغير", clue: "Small", letters: ["ر", "ي", "غ", "ص"] },
+      { target: "قديم", clue: "Old", letters: ["م", "ي", "د", "ق"] },
+      { target: "جديد", clue: "New", letters: ["د", "ي", "د", "ج"] }
+    ];
+    let currentSpelling = [];
+    const answerBox = document.getElementById('letter-answer-box');
+    const sourceBox = document.getElementById('letter-source-box');
+
+    function loadSpellLevel() {
+      if(currentSpellLevel >= spellingLevels.length) return; 
+      currentSpelling = [];
+      const level = spellingLevels[currentSpellLevel];
+      document.getElementById('spell-progress').textContent = `الكلمة ${currentSpellLevel + 1} من 12`;
+      document.getElementById('spell-clue').innerHTML = `كون كلمة: <strong>(${level.clue})</strong>`;
+      
+      answerBox.innerHTML = '';
+      for(let i=0; i < level.target.length; i++) {
+        const slot = document.createElement('div'); slot.className = 'slot'; answerBox.appendChild(slot);
+      }
+      sourceBox.innerHTML = '';
+      level.letters.forEach(letter => {
+        const box = document.createElement('div'); box.className = 'letter-box'; box.textContent = letter;
+        box.onclick = () => moveLetter(box, letter);
+        sourceBox.appendChild(box);
+      });
+      document.getElementById('feedback-spell').textContent = '';
+    }
+
+    function moveLetter(el, letter) {
+      playPop();
+      const level = spellingLevels[currentSpellLevel];
+      if (currentSpelling.length < level.target.length) {
+        currentSpelling.push(letter);
+        el.style.display = 'none';
+        const slots = answerBox.querySelectorAll('.slot');
+        slots[currentSpelling.length - 1].textContent = letter;
+      }
+    }
+
+    function resetLetters(manual = false) { if(manual) playPop(); loadSpellLevel(); }
+    function checkSpelling() {
+      const fb = document.getElementById('feedback-spell');
+      if(currentSpellLevel >= spellingLevels.length) return;
+      const target = spellingLevels[currentSpellLevel].target;
+      
+      if (currentSpelling.join('') === target) {
+        playSuccess(); fb.style.color = "#059669"; 
+        if (currentSpellLevel < 11) {
+          fb.textContent = "ممتاز! جاري تحميل الكلمة التالية... 🌟";
+          setTimeout(() => { currentSpellLevel++; loadSpellLevel(); }, 1500);
+        } else {
+          currentSpellLevel++; fb.textContent = "عمل رائع! لقد أكملت جميع الكلمات بنجاح 🏆";
+        }
+      } else {
+        playError(); fb.style.color = "#DC2626"; fb.textContent = "حاول مرة أخرى.";
+        setTimeout(resetLetters, 1500);
+      }
+    }
+    loadSpellLevel();
+
+    // --- FILL IN THE BLANKS ---
+    const fillDraggables = document.querySelectorAll('.fill-draggable');
+    const dropSlots = document.querySelectorAll('.blank-slot');
+    let draggedFillItem = null;
+
+    fillDraggables.forEach(d => {
+      d.addEventListener('dragstart', (e) => { 
+          draggedFillItem = d; 
+          setTimeout(() => d.style.display = 'none', 0); 
+      });
+      d.addEventListener('dragend', (e) => { 
+          if(draggedFillItem) { draggedFillItem.style.display = 'inline-block'; }
+          draggedFillItem = null; 
+      });
+    });
+
+    dropSlots.forEach(slot => {
+      slot.addEventListener('dragover', e => { e.preventDefault(); slot.style.background = "#E2E8F0"; });
+      slot.addEventListener('dragleave', () => { slot.style.background = "#FFF"; });
+      slot.addEventListener('drop', e => {
+        e.preventDefault(); slot.style.background = "#FFF";
+        if (draggedFillItem) {
+          playPop();
+          if (slot.getAttribute('data-target') === draggedFillItem.getAttribute('data-word')) {
+            playSuccess();
+            draggedFillItem.style.display = 'inline-block';
+            slot.appendChild(draggedFillItem);
+            draggedFillItem.setAttribute('draggable', 'false');
+            draggedFillItem.style.border = 'none';
+            draggedFillItem.style.boxShadow = 'none';
+            draggedFillItem.style.background = 'transparent';
+            draggedFillItem.style.padding = '0';
+            draggedFillItem.style.cursor = 'default';
+            slot.classList.add('correct');
+            draggedFillItem = null;
+            
+            const fillScore = document.querySelectorAll('.blank-slot.correct').length;
+            if(fillScore === 5) { 
+                document.getElementById('feedback-fill').style.color = "#059669"; 
+                document.getElementById('feedback-fill').textContent = "أحسنت! لقد أكملت جميع الجمل بنجاح 🏆"; 
+            }
+          } else {
+            playError(); 
+            draggedFillItem.style.display = 'inline-block';
+            const fb = document.getElementById('feedback-fill');
+            fb.style.color = "#DC2626"; fb.textContent = "حاول مرة أخرى!"; 
+            setTimeout(() => { fb.textContent = ""; }, 1500);
+          }
+        }
+      });
+    });
+
+    // --- SORTING ---
+    const draggables = document.querySelectorAll('.draggable');
+    const dropZones = document.querySelectorAll('.sort-zone');
+    let draggedItem = null;
+
+    draggables.forEach(d => {
+      d.addEventListener('dragstart', (e) => { 
+          draggedItem = d; 
+          setTimeout(() => d.style.display = 'none', 0); 
+      });
+      d.addEventListener('dragend', (e) => { e.target.style.display = 'inline-block'; draggedItem = null; });
+    });
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.background = "#E2E8F0"; });
+      zone.addEventListener('dragleave', () => { zone.style.background = "#F8FAFC"; });
+      zone.addEventListener('drop', e => {
+        e.preventDefault(); zone.style.background = "#F8FAFC";
+        if (draggedItem) {
+          playPop(); 
+          if (zone.getAttribute('data-target') === draggedItem.getAttribute('data-type')) {
+            playSuccess(); draggedItem.style.display = 'inline-block'; 
+            const itemsContainer = zone.querySelector('.dropped-items-container');
+            itemsContainer.appendChild(draggedItem); 
+            draggedItem.setAttribute('draggable', 'false');
+            draggedItem.style.borderColor = '#10B981'; draggedItem.style.background = '#D1FAE5'; draggedItem.style.cursor = 'default'; 
+            correctlySorted++; draggedItem = null; 
+            if(correctlySorted === 10) { document.getElementById('feedback-sort').style.color = "#059669"; document.getElementById('feedback-sort').textContent = "بطل! لقد صنفت الـ 10 كلمات بنجاح 🏆"; }
+          } else {
+            playError(); const fb = document.getElementById('feedback-sort');
+            fb.style.color = "#DC2626"; fb.textContent = "حاول مرة أخرى!"; setTimeout(() => { fb.textContent = ""; }, 1500);
+          }
+        }
+      });
+    });
+
+    // --- PAINT ---
+    const canvas = document.getElementById('paintCanvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    let isDrawing = false, currentColor = '#1E293B', currentTool = 'brush';
+
+    function drawScene() {
+      ctx.fillStyle = "#FFFFFF"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.lineWidth = 4; ctx.strokeStyle = '#333333';
+      
+      ctx.beginPath();
+      ctx.strokeRect(500, 150, 40, 200); 
+      ctx.arc(520, 100, 60, 0, Math.PI*2); 
+      ctx.stroke(); 
+      ctx.beginPath(); ctx.arc(100, 80, 40, 0, Math.PI*2); ctx.stroke(); 
+    }
+    drawScene();
+
+    function setTool(tool) { playPop(); currentTool = tool; document.getElementById('tool-brush').classList.toggle('active', tool === 'brush'); document.getElementById('tool-fill').classList.toggle('active', tool === 'fill'); canvas.style.cursor = tool === 'fill' ? 'crosshair' : 'default'; }
+    function setColor(btn, color) { playPop(); currentColor = color; document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+    function clearCanvas() { playPop(); drawScene(); }
+    function getMousePos(e) { const rect = canvas.getBoundingClientRect(); const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY; return { x: Math.round((clientX - rect.left) * (canvas.width / rect.width)), y: Math.round((clientY - rect.top) * (canvas.height / rect.height)) }; }
+
+    canvas.addEventListener('mousedown', (e) => { const pos = getMousePos(e); if (currentTool === 'fill') floodFill(pos.x, pos.y, hexToRgba(currentColor)); else { isDrawing = true; draw(pos); } });
+    canvas.addEventListener('mousemove', (e) => { if(isDrawing) draw(getMousePos(e)); });
+    canvas.addEventListener('mouseup', () => { isDrawing = false; ctx.beginPath(); });
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); const pos = getMousePos(e); if (currentTool === 'fill') floodFill(pos.x, pos.y, hexToRgba(currentColor)); else { isDrawing = true; draw(pos); }});
+    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if(isDrawing) draw(getMousePos(e)); });
+    canvas.addEventListener('touchend', () => { isDrawing = false; ctx.beginPath(); });
+
+    function draw(pos) { if (!isDrawing || currentTool !== 'brush') return; ctx.lineWidth = currentColor === '#FFFFFF' ? 20 : 12; ctx.lineCap = 'round'; ctx.strokeStyle = currentColor; ctx.lineTo(pos.x, pos.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }
+    function hexToRgba(hex) { return [ parseInt(hex.slice(1,3),16), parseInt(hex.slice(3,5),16), parseInt(hex.slice(5,7),16), 255 ]; }
+    function floodFill(startX, startY, fillColor) {
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height), data = imgData.data; const startPos = (startY * canvas.width + startX) * 4; const startColor = [data[startPos], data[startPos+1], data[startPos+2], data[startPos+3]];
+      if (startColor[0] === fillColor[0] && startColor[1] === fillColor[1] && startColor[2] === fillColor[2]) return;
+      const stack = [[startX, startY]];
+      while (stack.length > 0) {
+        let [x, y] = stack.pop(), pixelPos = (y * canvas.width + x) * 4;
+        while (y >= 0 && matchColor(data, pixelPos, startColor)) { y--; pixelPos -= canvas.width * 4; }
+        pixelPos += canvas.width * 4; y++; let reachLeft = false, reachRight = false;
+        while (y < canvas.height && matchColor(data, pixelPos, startColor)) {
+          setColorData(data, pixelPos, fillColor);
+          if (x > 0) { if (matchColor(data, pixelPos - 4, startColor)) { if (!reachLeft) { stack.push([x - 1, y]); reachLeft = true; } } else if (reachLeft) reachLeft = false; }
+          if (x < canvas.width - 1) { if (matchColor(data, pixelPos + 4, startColor)) { if (!reachRight) { stack.push([x + 1, y]); reachRight = true; } } else if (reachRight) reachRight = false; }
+          y++; pixelPos += canvas.width * 4;
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+    }
+    function matchColor(data, pos, startColor) { return data[pos] === startColor[0] && data[pos+1] === startColor[1] && data[pos+2] === startColor[2]; }
+    function setColorData(data, pos, color) { data[pos] = color[0]; data[pos+1] = color[1]; data[pos+2] = color[2]; data[pos+3] = color[3]; }
+
+// --- MATCHING ---
+    const matchBoard = document.getElementById('matchBoard');
+    const matchSvg = document.getElementById('matchSvg');
+    let isDrawingMatch = false;
+    let currentStartMatch = null;
+    let activeMatchLine = null;
+    let completedMatchLines = [];
+
+    function getMatchCenter(el) {
+      const boardRect = matchBoard.getBoundingClientRect();
+      const rect = el.getBoundingClientRect();
+      return {
+        x: rect.left - boardRect.left + rect.width / 2,
+        y: rect.top - boardRect.top + rect.height / 2
+      };
+    }
+
+    function startMatch(e) {
+      if (this.classList.contains('matched')) return;
+      isDrawingMatch = true;
+      currentStartMatch = this;
+      const center = getMatchCenter(this);
+      
+      activeMatchLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      activeMatchLine.setAttribute('x1', center.x);
+      activeMatchLine.setAttribute('y1', center.y);
+      activeMatchLine.setAttribute('x2', center.x);
+      activeMatchLine.setAttribute('y2', center.y);
+      activeMatchLine.setAttribute('stroke', '#3B82F6');
+      activeMatchLine.setAttribute('stroke-width', '4');
+      activeMatchLine.setAttribute('stroke-linecap', 'round');
+      matchSvg.appendChild(activeMatchLine);
+    }
+
+    function moveMatch(e) {
+      if (!isDrawingMatch || !activeMatchLine) return;
+      e.preventDefault();
+      const boardRect = matchBoard.getBoundingClientRect();
+      const touch = e.touches ? e.touches[0] : e;
+      const x = touch.clientX - boardRect.left;
+      const y = touch.clientY - boardRect.top;
+      activeMatchLine.setAttribute('x2', x);
+      activeMatchLine.setAttribute('y2', y);
+    }
+
+function endMatch(e) {
+  if (!isDrawingMatch) return;
+  isDrawingMatch = false;
+  
+  const touch = e.changedTouches ? e.changedTouches[0] : e;
+  const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+  const targetMatch = targetEl ? targetEl.closest('.match-right') : null;
+
+  if (targetMatch && !targetMatch.classList.contains('matched')) {
+    if (currentStartMatch.dataset.match === targetMatch.dataset.match) {
+      playSuccess();
+      currentStartMatch.classList.add('matched');
+      targetMatch.classList.add('matched');
+      activeMatchLine.setAttribute('stroke', '#10B981');
+      completedMatchLines.push({ line: activeMatchLine, startEl: currentStartMatch, endEl: targetMatch });
+      matchScore++;
+    } else {
+      playError();
+      activeMatchLine.setAttribute('stroke', '#EF4444');
+      completedMatchLines.push({ line: activeMatchLine, startEl: currentStartMatch, endEl: targetMatch });
+    }
+  } else {
+    activeMatchLine.remove();
+  }
+  activeMatchLine = null;
+}
+
+    document.querySelectorAll('.match-left').forEach(item => { 
+        item.addEventListener('mousedown', startMatch); 
+        item.addEventListener('touchstart', startMatch); 
+    });
+    matchBoard.addEventListener('mousemove', moveMatch); 
+    matchBoard.addEventListener('touchmove', moveMatch);
+    window.addEventListener('mouseup', endMatch); 
+    window.addEventListener('touchend', endMatch);
+
+    window.addEventListener('resize', () => {
+       completedMatchLines.forEach(item => {
+           const p1 = getMatchCenter(item.startEl); 
+           const p2 = getMatchCenter(item.endEl);
+           item.line.setAttribute('x1', p1.x); 
+           item.line.setAttribute('y1', p1.y);
+           item.line.setAttribute('x2', p2.x); 
+           item.line.setAttribute('y2', p2.y);
+       });
+    });
+
+// --- MAZE GAME LOGIC ---
+    const mazeTemplate = [
+        "WWWWWWWWWWWWWWW",
+        "W...A.....B...W",
+        "W.WWWWW.WWWWW.W",
+        "W.............W",
+        "W.WWW.WWW.WWW.W",
+        "W.W.........W.W",
+        "W.WWW.WWW.WWW.W",
+        "W.............W",
+        "W.WWWWW.WWWWW.W",
+        "W......C......W",
+        "WWWWWWWWWWWWWWW"
+    ];
+
+    let playerPos = { r: 6, c: 8 };
+    let targets = {
+        A: { r: 2, c: 5, el: null, val: "" },
+        B: { r: 2, c: 11, el: null, val: "" },
+        C: { r: 10, c: 8, el: null, val: "" }
+    };
+
+    let isMazeActive = false;
+    let currentMazeQIndex = 0;
+    let currentMazeCorrectAnswer = "";
+
+    const mazeQuestions = [
+        { text: "طَوِيل", correctImg: "tawil.png", wrongImgs: ["kassir.png", "sarii.png"] },
+        { text: "قَصِير", correctImg: "kassir.png", wrongImgs: ["tawil.png", "jadeed.png"] },
+        { text: "سَرِيع", correctImg: "sarii.png", wrongImgs: ["batii.png", "daiif.png"] },
+        { text: "بَطِيء", correctImg: "batii.png", wrongImgs: ["sarii.png", "kawi.png"] },
+        { text: "قَوِيّ", correctImg: "kawi.png", wrongImgs: ["daiif.png", "hout.svg"] },
+        { text: "ضَعِيف", correctImg: "daiif.png", wrongImgs: ["kawi.png", "tawil.png"] },
+        { text: "ثَقِيل", correctImg: "hout.svg", wrongImgs: ["khafif.png", "sarii.png"] },
+        { text: "خَفِيف", correctImg: "khafif.png", wrongImgs: ["hout.svg", "batii.png"] },
+        { text: "كَبِير", correctImg: "kabeer.png", wrongImgs: ["sagheer.png", "kadeem.png"] },
+        { text: "صَغِير", correctImg: "sagheer.png", wrongImgs: ["kabeer.png", "jadeed.png"] },
+        { text: "قَدِيم", correctImg: "kadeem.png", wrongImgs: ["jadeed.png", "kassir.png"] },
+        { text: "جَدِيد", correctImg: "jadeed.png", wrongImgs: ["kadeem.png", "khafif.png"] }
+    ];
+
+    function initMazeBoard() {
+        const grid = document.getElementById('maze-grid');
+        grid.innerHTML = '';
+        for(let r=0; r<mazeTemplate.length; r++) {
+            for(let c=0; c<mazeTemplate[r].length; c++) {
+                const char = mazeTemplate[r][c];
+                if(char === 'W') {
+                    const wall = document.createElement('div');
+                    wall.className = 'maze-wall';
+                    wall.style.gridArea = `${r+1} / ${c+1}`;
+                    grid.appendChild(wall);
+                }
+            }
+        }
+        
+        ['A', 'B', 'C'].forEach(key => {
+            const tgt = document.createElement('div');
+            tgt.className = 'maze-target';
+            tgt.id = `maze-target-${key}`;
+            tgt.style.gridArea = `${targets[key].r} / ${targets[key].c}`;
+            grid.appendChild(tgt);
+            targets[key].el = tgt;
+        });
+        
+        const player = document.createElement('div');
+        player.id = 'maze-player';
+        player.className = 'maze-player';
+        player.innerHTML = `<div id="maze-car-img" class="maze-player-avatar"><i data-lucide="tag"></i><span>صفة</span></div>`;
+        lucide.createIcons({ root: player });
+        player.style.gridArea = `${playerPos.r} / ${playerPos.c}`;
+        grid.appendChild(player);
+
+    }
+
+    function loadMazeQuestion() {
+        const q = mazeQuestions[currentMazeQIndex];
+        document.getElementById('maze-question-text').textContent = q.text;
+        document.getElementById('maze-question-text').style.display = 'block';
+        document.getElementById('maze-header-title').textContent = `السؤال ${currentMazeQIndex + 1} من 12: اذهب إلى الصورة المناسبة`;
+        currentMazeCorrectAnswer = q.correctImg;
+        
+        let opts = [q.correctImg, ...q.wrongImgs];
+        opts.sort(() => Math.random() - 0.5); // Shuffle
+        
+        targets['A'].val = opts[0]; targets['A'].el.innerHTML = `<img src="${GITHUB_BASE}${opts[0]}" alt="option">`;
+        targets['B'].val = opts[1]; targets['B'].el.innerHTML = `<img src="${GITHUB_BASE}${opts[1]}" alt="option">`;
+        targets['C'].val = opts[2]; targets['C'].el.innerHTML = `<img src="${GITHUB_BASE}${opts[2]}" alt="option">`;
+
+        // Reset positions
+        playerPos = {r: 6, c: 8};
+        document.getElementById('maze-player').style.gridArea = `${playerPos.r} / ${playerPos.c}`;
+        const carImg = document.getElementById('maze-car-img');
+        if (carImg) carImg.style.transform = 'rotate(0deg)'; 
+    }
+
+    function startMaze() {
+        isMazeActive = true;
+        loadMazeQuestion();
+        document.addEventListener('keydown', handleMazeKeys);
+    }
+
+    function stopMaze() {
+        isMazeActive = false;
+        document.removeEventListener('keydown', handleMazeKeys);
+    }
+
+    function handleMazeKeys(e) {
+        if(!isMazeActive) return;
+        if(e.key === 'ArrowUp') { e.preventDefault(); moveMazePlayer(-1, 0); }
+        if(e.key === 'ArrowDown') { e.preventDefault(); moveMazePlayer(1, 0); }
+        if(e.key === 'ArrowLeft') { e.preventDefault(); moveMazePlayer(0, -1); }
+        if(e.key === 'ArrowRight') { e.preventDefault(); moveMazePlayer(0, 1); }
+    }
+
+    function moveMazePlayer(dr, dc) {
+        if(!isMazeActive) return;
+        const nr = playerPos.r + dr;
+        const nc = playerPos.c + dc;
+        
+        // Change player direction
+        const carImg = document.getElementById('maze-car-img');
+        if (carImg) {
+            if (dc === 1) carImg.style.transform = 'rotate(0deg)';
+            else if (dc === -1) carImg.style.transform = 'rotate(180deg)';
+            else if (dr === -1) carImg.style.transform = 'rotate(-90deg)';
+            else if (dr === 1) carImg.style.transform = 'rotate(90deg)';
+        }
+
+        if(mazeTemplate[nr-1][nc-1] !== 'W') {
+            playerPos.r = nr;
+            playerPos.c = nc;
+            document.getElementById('maze-player').style.gridArea = `${nr} / ${nc}`;
+            checkMazeTarget();
+        }
+    }
+
+    function checkMazeTarget() {
+        ['A', 'B', 'C'].forEach(key => {
+            if(playerPos.r === targets[key].r && playerPos.c === targets[key].c) {
+                if(targets[key].val === currentMazeCorrectAnswer) {
+                    playSuccess();
+                    mazeScore++;
+                    targets[key].el.classList.add('correct-flash');
+                    isMazeActive = false;
+                    setTimeout(() => {
+                        targets[key].el.classList.remove('correct-flash');
+                        currentMazeQIndex++;
+                        if(currentMazeQIndex < mazeQuestions.length) {
+                            loadMazeQuestion();
+                            isMazeActive = true;
+                        } else {
+                            document.getElementById('maze-header-title').textContent = "أحسنت! أكملت المتاهة بنجاح 🏆";
+                            document.getElementById('maze-question-text').style.display = 'none';
+                            stopMaze();
+                            calculateFinalScore(); 
+                        }
+                    }, 1000);
+                } else {
+                    playError();
+                    targets[key].el.classList.add('wrong-flash');
+                    setTimeout(() => {
+                        targets[key].el.classList.remove('wrong-flash');
+                    }, 500);
+                    
+                    // Reset player to center if they hit the wrong target
+                    playerPos = {r: 6, c: 8}; 
+                    document.getElementById('maze-player').style.gridArea = `6 / 8`;
+                    document.getElementById('maze-player').style.transform = "scale(0)";
+                    setTimeout(() => {
+                         document.getElementById('maze-player').style.transform = "scale(1)";
+                    }, 200);
+                }
+            }
+        });
+    }
+    const hotspotElements = document.querySelectorAll('.hotspot');
+
+    function closeAllHotspots(exceptSpot = null) {
+        hotspotElements.forEach(spot => {
+            if (spot !== exceptSpot) spot.classList.remove('active');
+        });
+    }
+
+    hotspotElements.forEach(spot => {
+        spot.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const wasActive = this.classList.contains('active');
+            closeAllHotspots(this);
+            this.classList.toggle('active', !wasActive);
+            playPop();
+            const hotspotWord = this.dataset.word || this.querySelector('.hotspot-label span')?.textContent?.trim() || '';
+            if (!wasActive && hotspotWord) {
+                const entry = resolveEntry(normalizeToken(hotspotWord));
+                playWordAudio(entry, hotspotWord);
+            }
+            lucide.createIcons({ root: this });
+        });
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.hotspot')) closeAllHotspots();
+    });
+
+  </script>
+</body>
+</html>
