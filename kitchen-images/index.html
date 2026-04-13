@@ -1,0 +1,3242 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>المطبخ - Bubbles in Arabic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root{
+      --primary:#10B981;
+      --primary-dark:#059669;
+      --secondary:#3B82F6;
+      --secondary-dark:#2563EB;
+      --bg:#F0F9FF;
+      --card:#FFFFFF;
+      --text:#1E293B;
+      --muted:#64748B;
+      --line:#D7E7F7;
+      --correct:#D1FAE5;
+      --correct-text:#065F46;
+      --wrong:#FEE2E2;
+      --wrong-text:#B91C1C;
+      --warning:#F59E0B;
+    }
+    *{box-sizing:border-box;font-family:'Almarai',sans-serif}
+    body{
+      margin:0;
+      font-family:'Almarai',sans-serif;
+      background:
+        linear-gradient(rgba(240,249,255,.78),rgba(240,249,255,.9)),
+        url('https://raw.githubusercontent.com/bubblesinarabic/things-in-my-house/main/kitchen-images/kitchen-header-background.png') center/cover fixed;
+      color:var(--text);
+      padding:20px;
+    }
+    .app{
+      max-width:1100px;
+      margin:0 auto;
+      background:rgba(255,255,255,.94);
+      border:4px solid #DBEEFF;
+      border-radius:28px;
+      overflow:hidden;
+      box-shadow:0 20px 45px rgba(15,23,42,.14);
+      min-height:86vh;
+      display:flex;
+      flex-direction:column;
+    }
+    .hero{
+      position:relative;
+      padding:90px 20px 34px;
+      text-align:center;
+      background:
+        linear-gradient(to bottom, rgba(255,255,255,.35), rgba(255,255,255,.92)),
+        url('https://raw.githubusercontent.com/bubblesinarabic/things-in-my-house/main/kitchen-images/kitchen-compare-image1.png') center/cover no-repeat;
+      border-bottom:4px solid var(--secondary);
+    }
+    .hero h1{
+      display:inline-block;
+      margin:0;
+      background:rgba(255,255,255,.95);
+      border-radius:16px;
+      padding:12px 28px;
+      font-size:34px;
+      box-shadow:0 10px 24px rgba(0,0,0,.08);
+      color:#274C77;
+    }
+    .hero p{
+      margin:12px 0 0;
+      color:var(--secondary);
+      font-weight:800;
+      display:inline-block;
+      background:rgba(255,255,255,.9);
+      border-radius:999px;
+      padding:7px 16px;
+    }
+    .slides{
+      flex:1;
+      padding:28px;
+      overflow:auto;
+      max-height:calc(100vh - 220px);
+    }
+    .slide{display:none; animation:fade .25s ease}
+    .slide.active{display:block}
+    @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .slide-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      border-bottom:2px dashed #BFDBFE;
+      padding-bottom:12px;
+      margin-bottom:16px;
+    }
+    .slide-head h2,.solo-title{
+      margin:0;
+      color:var(--secondary);
+      font-size:27px;
+    }
+    .solo-title{
+      text-align:center;
+      border:none;
+      font-size:32px;
+      margin-top:8px;
+    }
+    .instruction{
+      color:var(--muted);
+      font-size:18px;
+      font-weight:700;
+      margin:0 0 18px;
+    }
+    .back-btn,.nav-btn,.action-btn,.choice-btn,.check-btn,.chip{
+      font-family:inherit;
+      border:none;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+    .back-btn{
+      background:#F8FAFC;
+      color:var(--secondary);
+      border:2px solid #BFDBFE;
+      border-radius:12px;
+      padding:9px 14px;
+      font-weight:800;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .back-btn:hover{transform:translateY(-1px);background:#EFF6FF}
+    .menu-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:18px;
+      margin-top:22px;
+    }
+    .menu-card{
+      background:#fff;
+      border:3px solid #E2E8F0;
+      border-radius:18px;
+      padding:24px 18px;
+      text-align:center;
+      color:var(--secondary);
+      font-weight:800;
+      font-size:22px;
+      cursor:pointer;
+      transition:.24s ease;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+      min-height:152px;
+      justify-content:center;
+    }
+    .menu-card i{width:38px;height:38px;color:var(--primary)}
+    .menu-card:hover{
+      transform:translateY(-5px);
+      border-color:var(--primary);
+      background:#F0FDF4;
+      color:var(--primary-dark);
+      box-shadow:0 14px 28px rgba(16,185,129,.14);
+    }
+    .panel{
+      background:#fff;
+      border:2px solid #E2E8F0;
+      border-radius:18px;
+      padding:18px;
+      margin-bottom:18px;
+    }
+    .feedback{
+      min-height:28px;
+      margin-top:14px;
+      font-size:18px;
+      font-weight:800;
+      text-align:center;
+    }
+    .success{color:var(--correct-text)}
+    .error{color:var(--wrong-text)}
+    .footer{
+      border-top:2px solid #E2E8F0;
+      background:#F8FAFC;
+      padding:14px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .nav-btn{
+      background:var(--primary);
+      color:#fff;
+      border-radius:999px;
+      padding:12px 22px;
+      font-size:16px;
+      font-weight:800;
+    }
+    .nav-btn:hover{filter:brightness(.95);transform:scale(1.02)}
+    .nav-btn:disabled{background:#CBD5E1;cursor:not-allowed;transform:none}
+    .dots{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+    .dot{width:11px;height:11px;border-radius:50%;background:#CBD5E1}
+    .dot.active{background:var(--secondary);transform:scale(1.18)}
+    .welcome-box{
+      max-width:620px;
+      margin:12px auto 0;
+      padding:34px;
+      background:#fff;
+      border:3px solid #E2E8F0;
+      border-radius:24px;
+      text-align:center;
+      box-shadow:0 16px 28px rgba(0,0,0,.05);
+    }
+    .welcome-box .big{
+      font-size:20px;
+      color:var(--muted);
+      font-weight:700;
+      line-height:1.9;
+    }
+    .welcome-preview{
+      width:170px;
+      height:170px;
+      margin:16px auto 18px;
+      border-radius:50%;
+      border:4px dashed var(--secondary);
+      background:#F8FAFC;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      box-shadow:0 8px 20px rgba(0,0,0,.08);
+    }
+    .welcome-preview img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+    .welcome-controls{
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+    .upload-btn{
+      border:none;
+      border-radius:14px;
+      padding:12px 18px;
+      color:#fff;
+      font-size:18px;
+      font-weight:800;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      box-shadow:0 8px 16px rgba(0,0,0,.08);
+    }
+    .upload-btn.camera{background:var(--secondary)}
+    .upload-btn.file{background:var(--primary)}
+    .upload-btn:hover{filter:brightness(.96);transform:translateY(-1px)}
+    .start-btn{
+      margin-top:26px;
+      background:var(--text);
+      color:#fff;
+      border:none;
+      border-radius:18px;
+      padding:16px 38px;
+      font-size:22px;
+      font-weight:800;
+      cursor:pointer;
+      width:100%;
+    }
+    .score-strip{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      justify-content:center;
+      margin-bottom:18px;
+    }
+    .metric{
+      background:#fff;
+      border:2px solid #E2E8F0;
+      border-radius:16px;
+      padding:12px 16px;
+      min-width:150px;
+      text-align:center;
+    }
+    .metric strong{display:block;font-size:28px;color:var(--primary)}
+    .metric span{color:var(--muted);font-weight:800}
+    .rearrange-layout{
+      display:grid;
+      grid-template-columns:220px minmax(0,1fr);
+      gap:20px;
+      align-items:start;
+    }
+    .asset-bank,
+    .room-stage-wrap{
+      background:#F8FAFC;
+      border:2px solid #E2E8F0;
+      border-radius:20px;
+      padding:12px;
+    }
+    .asset-bank{
+      max-height:760px;
+      overflow:auto;
+    }
+    .asset-bank-title{
+      font-size:20px;
+      font-weight:900;
+      color:var(--secondary);
+      margin:4px 0 10px;
+      text-align:center;
+    }
+    .asset-bank-note{
+      background:#fff;
+      border:2px dashed #BFDBFE;
+      border-radius:14px;
+      padding:10px 12px;
+      color:var(--muted);
+      font-weight:800;
+      font-size:14px;
+      text-align:center;
+      margin-bottom:12px;
+    }
+    .asset-bank-grid{
+      display:grid;
+      grid-template-columns:repeat(1,minmax(0,1fr));
+      gap:12px;
+    }
+    .bank-item{
+      position:relative;
+      background:#fff;
+      border:2px solid #DBEAFE;
+      border-radius:16px;
+      padding:10px;
+      min-height:96px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      cursor:grab;
+      user-select:none;
+      transition:.18s ease;
+    }
+    .bank-item:hover{transform:translateY(-2px);border-color:var(--secondary)}
+    .bank-item img{
+      max-width:100%;
+      max-height:58px;
+      object-fit:contain;
+      pointer-events:none;
+      filter:drop-shadow(0 6px 8px rgba(0,0,0,.12));
+    }
+    .bank-item span{font-weight:800;color:var(--secondary);font-size:13px;text-align:center}
+    .room-stage{
+      position:relative;
+      width:100%;
+      aspect-ratio:16/9;
+      background:url('https://raw.githubusercontent.com/bubblesinarabic/things-in-my-house/main/kitchen-images/kitchen-rearrage.png') center/cover no-repeat;
+      border-radius:18px;
+      overflow:hidden;
+      touch-action:none;
+      user-select:none;
+    }
+    .free-item{
+      position:absolute;
+      width:16%;
+      min-width:56px;
+      max-width:none;
+      aspect-ratio:1 / 1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:grab;
+      touch-action:none;
+      user-select:none;
+      filter:drop-shadow(0 8px 12px rgba(0,0,0,.18));
+      transition:transform .12s ease, box-shadow .12s ease;
+      z-index:2;
+    }
+    .free-item.dragging{
+      cursor:grabbing;
+      transform:scale(1.04);
+      z-index:20;
+    }
+    .free-item.selected{
+      outline:3px solid rgba(59,130,246,.45);
+      outline-offset:4px;
+      border-radius:16px;
+      z-index:25;
+    }
+    .free-item img{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:contain;
+      pointer-events:none;
+    }
+    .resize-handle{
+      position:absolute;
+      width:16px;
+      height:16px;
+      border-radius:50%;
+      background:var(--primary);
+      border:2px solid #fff;
+      left:-8px;
+      bottom:-8px;
+      cursor:nwse-resize;
+      box-shadow:0 4px 10px rgba(0,0,0,.22);
+      display:none;
+      touch-action:none;
+    }
+    .free-item.selected .resize-handle{display:block}
+    .transform-panel{
+      margin-top:14px;
+      background:#fff;
+      border:2px solid #DBEAFE;
+      border-radius:16px;
+      padding:12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:center;
+    }
+    .transform-panel .label{
+      font-weight:900;
+      color:var(--secondary);
+    }
+    .sandbox-note{
+      text-align:center;
+      background:#fff;
+      border:2px dashed #BFDBFE;
+      border-radius:14px;
+      padding:12px 14px;
+      color:var(--secondary);
+      font-weight:800;
+      margin-top:14px;
+    }
+    .action-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      margin-top:14px;
+    }
+    .action-btn{
+      border-radius:12px;
+      padding:10px 18px;
+      font-size:16px;
+      font-weight:800;
+      background:#EFF6FF;
+      color:var(--secondary);
+      border:2px solid #BFDBFE;
+    }
+    .action-btn:hover{transform:translateY(-1px)}
+    .action-btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .action-btn.warn{background:#FFF7ED;color:#C2410C;border-color:#FED7AA}
+    .compare-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+    .hint-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      background:#FFF7ED;
+      border:1px dashed #FDBA74;
+      color:#9A3412;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:13px;
+      font-weight:800;
+      margin-inline-start:8px;
+      cursor:help;
+    }
+    .hint-chip i{width:15px;height:15px}
+    .sentence{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:8px;
+    }
+    .letter-game{
+      background:#F8FAFC;
+      border:2px solid #E2E8F0;
+      border-radius:20px;
+      padding:18px;
+    }
+    .letter-prompt{
+      text-align:center;
+      font-weight:900;
+      color:var(--secondary);
+      margin-bottom:10px;
+      font-size:26px;
+    }
+    .letter-clue{
+      text-align:center;
+      color:var(--muted);
+      font-weight:800;
+      margin-bottom:18px;
+    }
+    .letter-slots,.letter-bank{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:10px;
+      min-height:62px;
+      margin-bottom:18px;
+    }
+    .letter-slot,.letter-tile{
+      width:58px;height:58px;
+      border-radius:16px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:30px;font-weight:900;
+      font-family:'Almarai',sans-serif;
+    }
+    .letter-slot{
+      border:2px dashed #BFDBFE;
+      background:#fff;
+      color:var(--secondary);
+    }
+    .letter-tile{
+      border:2px solid #93C5FD;
+      background:#EFF6FF;
+      color:var(--secondary);
+      cursor:pointer;
+      user-select:none;
+      box-shadow:0 4px 10px rgba(59,130,246,.1);
+    }
+    .letter-tile.used{visibility:hidden}
+    .bubble-panel{
+      background:#F8FAFC;
+      border:2px solid #E2E8F0;
+      border-radius:20px;
+      padding:18px;
+    }
+    .bubble-instruction{
+      text-align:center;
+      font-weight:900;
+      color:var(--secondary);
+      font-size:24px;
+      margin-bottom:6px;
+    }
+    .bubble-target{
+      text-align:center;
+      font-size:34px;
+      font-weight:900;
+      color:var(--primary);
+      margin-bottom:14px;
+    }
+    .bubble-arena{
+      position:relative;
+      min-height:430px;
+      background:linear-gradient(180deg, rgba(255,255,255,.7), rgba(219,234,254,.9));
+      border:2px dashed #93C5FD;
+      border-radius:22px;
+      overflow:hidden;
+    }
+    .bubble{
+      position:absolute;
+      width:118px;
+      height:118px;
+      border-radius:50%;
+      background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.95), rgba(191,219,254,.9));
+      border:3px solid rgba(59,130,246,.35);
+      box-shadow:0 10px 24px rgba(59,130,246,.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition:transform .18s ease, opacity .18s ease;
+      animation:floatBubble 4s ease-in-out infinite;
+    }
+    .bubble:hover{transform:scale(1.06)}
+    .bubble img{
+      width:68%;
+      height:68%;
+      object-fit:contain;
+      pointer-events:none;
+      filter:drop-shadow(0 6px 10px rgba(0,0,0,.12));
+    }
+    .bubble.popped{
+      opacity:0;
+      transform:scale(.4);
+      pointer-events:none;
+    }
+    .bubble.wrong{
+      animation:shakeBubble .35s linear;
+    }
+    @keyframes floatBubble{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-10px)}
+    }
+    @keyframes shakeBubble{
+      0%,100%{transform:translateX(0)}
+      25%{transform:translateX(-8px)}
+      50%{transform:translateX(8px)}
+      75%{transform:translateX(-6px)}
+    }
+    .compare-card img{
+      width:100%;
+      border-radius:18px;
+      border:3px solid #E2E8F0;
+      background:#fff;
+      display:block;
+    }
+    .compare-label{
+      text-align:center;
+      margin-bottom:10px;
+      font-weight:800;
+      color:var(--secondary);
+      font-size:18px;
+    }
+    .compare-picks{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+      margin-top:10px;
+    }
+    .compare-pick{
+      background:#fff;
+      border:2px solid #CBD5E1;
+      border-radius:18px;
+      padding:12px;
+      text-align:center;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+    .compare-pick img{
+      width:100%;
+      max-width:90px;
+      height:82px;
+      object-fit:contain;
+      display:block;
+      margin:0 auto 8px;
+      pointer-events:none;
+    }
+    .compare-pick span{font-weight:800;color:var(--secondary);pointer-events:none}
+    .compare-pick.active{background:#DBEAFE;border-color:#93C5FD;box-shadow:0 0 0 4px rgba(147,197,253,.2)}
+    .compare-pick.correct{background:var(--correct);border-color:#34D399}
+    .compare-pick.wrong{background:var(--wrong);border-color:#FCA5A5}
+    .compare-pick.disabled{opacity:.72}
+    .hotspot-stage{position:relative;border:4px solid #CBD5E1;border-radius:28px;overflow:hidden;background:#fff;box-shadow:var(--shadow-soft);max-width:1100px;margin:0 auto}
+    .hotspot-stage img{width:100%;display:block}
+    .hotspot-dot{position:absolute;width:38px;height:38px;border-radius:999px;border:4px solid #10B981;background:rgba(255,255,255,.55);transform:translate(-50%,-50%);cursor:pointer;box-shadow:0 0 0 16px rgba(16,185,129,.12);animation:hotspotPulse 1.8s infinite}
+    .hotspot-dot.found{opacity:0;transform:translate(-50%,-50%) scale(.6);pointer-events:none;animation:none;box-shadow:none;border-color:transparent;background:transparent}
+    .hotspot-label{position:absolute;transform:translate(-50%,-50%);background:#fff;color:var(--secondary);padding:10px 16px;border-radius:999px;border:2px solid #93C5FD;font-weight:800;box-shadow:var(--shadow-soft);pointer-events:none;white-space:nowrap}
+    .hotspot-counter{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:18px 0}
+    .hotspot-chip{background:#EFF6FF;color:var(--secondary);border:2px solid #BFDBFE;padding:8px 14px;border-radius:999px;font-weight:800}
+    .hotspot-chip.done{background:#DCFCE7;color:#166534;border-color:#86EFAC}
+    @keyframes hotspotPulse{0%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 0 0 rgba(16,185,129,.35)}70%{transform:translate(-50%,-50%) scale(1.05);box-shadow:0 0 0 18px rgba(16,185,129,0)}100%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+    .matching-wrapper{
+      display:grid;
+      grid-template-columns:330px 1fr;
+      gap:18px;
+      align-items:start;
+    }
+    .word-list{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-content:flex-start;
+      background:#F8FAFC;
+      border-radius:18px;
+      border:2px solid #E2E8F0;
+      padding:14px;
+      min-height:520px;
+    }
+    .word-pill{
+      padding:10px 16px;
+      background:#fff;
+      color:var(--secondary);
+      border:2px solid #BFDBFE;
+      border-radius:999px;
+      font-weight:800;
+      cursor:pointer;
+    }
+    .word-pill.selected{background:#DBEAFE;border-color:#60A5FA}
+    .word-pill.done{background:var(--correct);border-color:#34D399;color:var(--correct-text);cursor:default}
+    .image-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+    }
+    .image-card{
+      background:#fff;
+      border:2px solid #E2E8F0;
+      border-radius:18px;
+      padding:12px;
+      text-align:center;
+      cursor:pointer;
+      transition:.18s ease;
+      min-height:150px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    .image-card img{
+      width:100%;
+      max-width:100px;
+      height:76px;
+      object-fit:contain;
+    }
+    .image-card span{font-weight:800;color:var(--muted);font-size:14px}
+    .image-card.selected{border-color:#60A5FA;box-shadow:0 0 0 4px rgba(96,165,250,.16)}
+    .image-card.done{background:var(--correct);border-color:#34D399}
+    .image-card.shake{animation:shake .25s linear 2}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(4px)}75%{transform:translateX(-4px)}}
+    .fill-bank{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:center;
+      background:#fff;
+      border:2px solid #E2E8F0;
+      border-radius:18px;
+      padding:16px;
+      margin-bottom:18px;
+    }
+    .fill-word{
+      padding:10px 18px;
+      border:2px solid #BFDBFE;
+      border-radius:12px;
+      background:#fff;
+      font-weight:800;
+      color:var(--secondary);
+      cursor:grab;
+    }
+    .sentence{
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:10px;
+      background:#F8FAFC;
+      border:1px solid #E2E8F0;
+      border-radius:16px;
+      padding:16px 18px;
+      margin-bottom:12px;
+      font-size:21px;
+      font-weight:800;
+    }
+    .sentence .blank{
+      min-width:118px;
+      min-height:42px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:2px dashed #CBD5E1;
+      border-radius:10px;
+      background:#fff;
+      padding:4px 8px;
+    }
+    .sentence .blank.correct{
+      background:var(--correct);
+      border-style:solid;
+      border-color:#34D399;
+    }
+    .riddle-single{max-width:920px;margin:0 auto;}
+    .riddle-nav{display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px}
+    .riddle-card{
+      background:linear-gradient(180deg,#ffffff,#f8fbff);
+      border:3px solid #D7E7F7;
+      border-radius:26px;
+      padding:26px 28px 24px;
+      box-shadow:0 14px 30px rgba(59,130,246,.08);
+      text-align:center;
+    }
+    .riddle-card h3{
+      margin:0 auto 14px;
+      font-size:28px;
+      color:var(--secondary);
+      display:inline-block;
+      background:#EFF6FF;
+      border:2px solid #BFDBFE;
+      border-radius:999px;
+      padding:10px 22px;
+      line-height:1.2;
+    }
+    .riddle-card p{
+      margin:0 auto 18px;
+      color:var(--text);
+      line-height:1.85;
+      font-weight:800;
+      font-size:34px;
+      min-height:120px;
+      max-width:920px;
+    }
+    .choices{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-top:8px;
+    }
+    .choice-btn{
+      background:#fff;
+      border:3px solid #CBD5E1;
+      border-radius:999px;
+      padding:14px 26px;
+      font-weight:900;
+      color:var(--text);
+      font-size:24px;
+      min-width:138px;
+      box-shadow:0 6px 14px rgba(15,23,42,.05);
+    }
+    .choice-btn:hover{background:#F8FAFC;transform:translateY(-2px)}
+    .choice-btn.correct{
+      background:var(--correct);
+      color:var(--correct-text);
+      border-color:#34D399;
+    }
+    .choice-btn.wrong{
+      background:var(--wrong);
+      color:var(--wrong-text);
+      border-color:#FCA5A5;
+    }
+    .choice-btn:disabled{cursor:default}
+    .riddle-answer{
+      margin-top:16px;
+      font-weight:900;
+      min-height:34px;
+      font-size:24px;
+      text-align:center;
+    }
+    .name-entry{max-width:420px;margin:18px auto 0;display:flex;flex-direction:column;gap:10px;align-items:center}
+    .name-entry label{font-weight:800;color:var(--secondary);font-size:18px}
+    .name-input{width:100%;padding:14px 18px;border-radius:16px;border:2px solid #BFDBFE;font-family:'Almarai',sans-serif;font-size:20px;text-align:center;outline:none;background:#fff}
+    .name-input:focus{border-color:var(--secondary);box-shadow:0 0 0 4px rgba(59,130,246,.12)}
+    .welcome-name{font-size:22px;font-weight:900;color:var(--primary);margin-top:12px;min-height:34px}
+    .bubble-controls{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin:6px 0 14px}
+    .bubble-controls label{font-weight:800;color:var(--secondary)}
+    .bubble-speed{accent-color:var(--primary);width:220px}
+    .bubble-speed-value{font-weight:900;color:var(--primary);min-width:42px;text-align:center}
+    .flashcard-stage{max-width:860px;margin:0 auto;text-align:center}
+    .flashcard-box{width:320px;height:360px;margin:18px auto;perspective:1200px;cursor:pointer}
+    .flashcard-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .7s ease}
+    .flashcard-box.flipped .flashcard-inner{transform:rotateY(180deg)}
+    .flash-face{position:absolute;inset:0;border-radius:28px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;border:4px solid #BFDBFE;box-shadow:0 16px 30px rgba(59,130,246,.14)}
+    .flash-front{background:linear-gradient(180deg,#fff,#EFF6FF);color:var(--secondary)}
+    .flash-front .word{font-size:44px;font-weight:900}
+    .flash-front .sub{margin-top:12px;font-size:18px;font-weight:700;color:#64748B}
+    .flash-back{background:linear-gradient(180deg,#F0FDF4,#DCFCE7);transform:rotateY(180deg);color:var(--text)}
+    .flash-back img{width:150px;height:150px;object-fit:contain;margin-bottom:16px;filter:drop-shadow(0 8px 16px rgba(0,0,0,.12))}
+    .flash-back .meaning{font-size:28px;font-weight:900;color:var(--primary)}
+    .flash-nav{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap}
+    .flash-progress{font-size:18px;font-weight:800;color:var(--secondary)}
+    .coloring-panel{background:#F8FAFC;border:2px solid #E2E8F0;border-radius:20px;padding:18px}
+    .coloring-tools{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+    .color-chip{width:34px;height:34px;border-radius:999px;border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.12);cursor:pointer}
+    .color-chip.active{outline:3px solid var(--secondary)}
+    .tool-btn.active{background:var(--secondary);color:#fff;border-color:var(--secondary)}
+    .coloring-wrap{position:relative;max-width:980px;margin:0 auto;border-radius:24px;overflow:hidden;border:3px solid #BFDBFE;background:#fff;aspect-ratio:980/540}
+    .coloring-sketch{position:absolute;inset:0;width:100%;height:100%;display:block;background:#fff;z-index:1}
+    #colorScene{position:absolute;inset:0;display:block;width:100%;height:100%;background:transparent;touch-action:none;cursor:crosshair;z-index:2}
+    #colorScene.bucket-mode{cursor:cell}
+    #colorScene.eraser-mode{cursor:crosshair}
+    .completion{
+      text-align:center;
+      padding:20px 10px 10px;
+    }
+    .completion .award{
+      width:110px;height:110px;color:var(--warning);
+      margin:0 auto 8px;display:block;
+    }
+    .score-box{
+      display:inline-block;
+      margin:18px 0;
+      padding:20px 40px;
+      border-radius:24px;
+      background:#F0FDF4;
+      border:3px solid #34D399;
+      box-shadow:0 10px 24px rgba(16,185,129,.14);
+    }
+    .score-box .num{
+      font-size:48px;
+      font-weight:900;
+      color:var(--primary);
+      direction:ltr;
+      display:block;
+      margin-top:6px;
+    }
+    .summary-list{
+      max-width:760px;
+      margin:18px auto 0;
+      text-align:right;
+      background:#fff;
+      border:2px solid #E2E8F0;
+      border-radius:18px;
+      padding:18px 22px;
+      line-height:2;
+      font-weight:700;
+      color:var(--text);
+    }
+    .sentence-card{display:flex;align-items:center;gap:14px;background:#fff;border:2px solid #E2E8F0;border-radius:18px;padding:14px 16px;margin-bottom:14px;flex-wrap:wrap;}
+    .sentence-main{flex:1;min-width:260px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .hint-visual{display:flex;align-items:center;gap:10px;background:#F8FAFC;border:2px dashed #BFDBFE;border-radius:16px;padding:8px 12px;min-width:150px;}
+    .hint-visual img{width:52px;height:52px;object-fit:contain;background:#fff;border-radius:12px;padding:6px;border:1px solid #E2E8F0;}
+    .hint-visual .text{font-size:14px;font-weight:800;color:var(--muted);line-height:1.6;}
+    .hint-visual[data-tip]:hover::after{content:attr(data-tip);position:absolute;transform:translateY(-110%);background:#0F172A;color:#fff;padding:8px 10px;border-radius:10px;font-size:13px;white-space:nowrap;box-shadow:0 10px 24px rgba(15,23,42,.2);}
+    .hint-visual{position:relative;}
+    .riddle-visual{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      background:linear-gradient(180deg,#EFF6FF,#DBEAFE);
+      border-radius:24px;
+      padding:18px;
+      margin:14px auto 22px;
+      border:3px dashed #93C5FD;
+      min-height:170px;
+      max-width:520px;
+    }
+    .riddle-visual img{
+      width:132px;
+      height:132px;
+      object-fit:contain;
+      background:#fff;
+      border-radius:22px;
+      padding:14px;
+      border:2px solid #DBEAFE;
+      box-shadow:0 10px 20px rgba(59,130,246,.14);
+    }
+    .riddle-visual .copy{font-size:18px;font-weight:800;color:#1D4ED8;line-height:1.7;}
+    .riddle-hint-wrap{
+      display:flex;
+      justify-content:center;
+      margin:14px auto 22px;
+    }
+    .riddle-hint-card{
+      width:min(100%, 360px);
+      height:220px;
+      border:none;
+      background:transparent;
+      padding:0;
+      cursor:pointer;
+      perspective:1200px;
+    }
+    .riddle-hint-inner{
+      position:relative;
+      width:100%;
+      height:100%;
+      transform-style:preserve-3d;
+      transition:transform .7s ease;
+    }
+    .riddle-hint-card.flipped .riddle-hint-inner{
+      transform:rotateY(180deg);
+    }
+    .riddle-hint-face{
+      position:absolute;
+      inset:0;
+      border-radius:28px;
+      backface-visibility:hidden;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      box-shadow:0 14px 28px rgba(59,130,246,.12);
+    }
+    .riddle-hint-front{
+      background:linear-gradient(180deg,#EFF6FF,#DBEAFE);
+      border:3px dashed #93C5FD;
+      color:#1D4ED8;
+      gap:10px;
+    }
+    .riddle-hint-front .emoji{
+      font-size:54px;
+      line-height:1;
+    }
+    .riddle-hint-front .title{
+      font-size:28px;
+      font-weight:900;
+    }
+    .riddle-hint-front .sub{
+      font-size:18px;
+      font-weight:800;
+      color:#475569;
+    }
+    .riddle-hint-back{
+      background:linear-gradient(180deg,#ffffff,#f8fbff);
+      border:3px solid #BFDBFE;
+      transform:rotateY(180deg);
+      gap:12px;
+    }
+    .riddle-hint-back img{
+      width:150px;
+      height:150px;
+      object-fit:contain;
+      background:#fff;
+      border-radius:24px;
+      padding:14px;
+      border:2px solid #DBEAFE;
+      box-shadow:0 10px 20px rgba(59,130,246,.14);
+    }
+    .riddle-hint-back .label{
+      font-size:20px;
+      font-weight:900;
+      color:var(--secondary);
+    }
+    .certificate-wrap{max-width:820px;margin:24px auto 0;}
+    .certificate-card{position:relative;background:#fff;border:4px solid #DBEEFF;border-radius:26px;overflow:hidden;box-shadow:0 18px 40px rgba(15,23,42,.12);}
+    .certificate-bg{width:100%;height:420px;object-fit:cover;display:block;filter:saturate(1.02);}
+    .certificate-overlay{position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.18),rgba(255,255,255,.88));display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;}
+    .certificate-badge{display:inline-flex;align-items:center;gap:10px;padding:10px 18px;background:rgba(255,255,255,.96);border-radius:999px;border:2px solid #BFDBFE;color:var(--secondary);font-weight:900;box-shadow:0 8px 18px rgba(59,130,246,.12);}
+    .certificate-title{font-size:44px;font-weight:900;color:#1E3A8A;margin:18px 0 8px;}
+    .certificate-sub{font-size:22px;font-weight:700;color:#475569;margin-bottom:14px;}
+    .certificate-name{font-size:46px;font-weight:900;color:var(--primary);background:rgba(255,255,255,.9);padding:10px 36px;border-radius:20px;border:3px dashed #86EFAC;margin:8px 0 16px;min-width:320px;}
+    .certificate-score{font-size:24px;font-weight:900;color:#065F46;background:#ECFDF5;padding:10px 24px;border-radius:999px;border:2px solid #A7F3D0;}
+    .certificate-note{margin-top:14px;font-weight:700;color:#334155;background:rgba(255,255,255,.86);padding:10px 18px;border-radius:14px;}
+    .certificate-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:18px;}
+    .lock-note{max-width:700px;margin:20px auto;background:#FFF7ED;border:2px solid #FED7AA;color:#9A3412;padding:16px 18px;border-radius:18px;font-weight:800;line-height:1.9;}
+    @media (max-width: 900px){
+      .rearrange-layout,.matching-wrapper,.compare-grid,.riddle-grid{grid-template-columns:1fr}
+      .image-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .word-list{min-height:auto}
+    }
+    @media (max-width: 640px){
+      body{padding:10px}
+      .slides{padding:16px}
+      .hero{padding:70px 16px 28px}
+      .hero h1{font-size:28px}
+      .slide-head{flex-direction:column;align-items:flex-start}
+      .sentence{font-size:18px}
+      .image-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .item-bank{grid-template-columns:1fr 1fr}
+      .footer{padding:12px 14px}
+      .riddle-card{padding:20px 16px 18px}
+      .riddle-card h3{font-size:22px;padding:8px 16px}
+      .riddle-card p{font-size:24px;min-height:96px}
+      .choice-btn{font-size:20px;padding:12px 20px;min-width:120px}
+      .riddle-visual{min-height:148px;max-width:100%;padding:14px}
+      .riddle-visual img{width:104px;height:104px;padding:10px}
+      .riddle-answer{font-size:20px}
+    }
+    .audio-mini{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;background:#EFF6FF;color:var(--secondary);border:2px solid #BFDBFE;border-radius:999px;padding:8px 12px;font-weight:800;cursor:pointer;transition:.2s;font-family:'Almarai',sans-serif}
+    .audio-mini:hover{background:#DBEAFE;transform:translateY(-1px)}
+    .audio-mini i{width:16px;height:16px}
+    .hint-media{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .hint-media img{width:52px;height:52px;object-fit:contain;background:#fff;border:2px solid #D7E7F7;border-radius:12px;padding:4px}
+    .image-only-hint{padding:6px 10px}
+    .image-only-hint .hint-media{gap:0}
+    .word-with-audio{display:inline-flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap}
+    .asset-bank-note,.sandbox-note{display:none;}
+    .passage-layout{display:grid;grid-template-columns:1.4fr .95fr;gap:22px;align-items:start}
+    .passage-card,.passage-info{background:#fff;border:2px solid #dbeafe;border-radius:28px;box-shadow:0 10px 24px rgba(37,99,235,.08)}
+    .passage-card{padding:26px}
+    .passage-info{padding:22px;position:sticky;top:10px}
+    .passage-text{font-size:16px;line-height:1.95;color:#334155}
+    .passage-line{margin-bottom:8px}
+    .passage-word{display:inline-block;padding:4px 8px;border-radius:12px;transition:.2s;cursor:default}
+    .passage-word.target{cursor:pointer;background:#eff6ff;border:2px solid #bfdbfe;font-weight:800;color:#1d4ed8}
+    .passage-word.target:hover,.passage-word.target.active{background:#dbeafe;transform:translateY(-1px)}
+    .passage-helper{margin:0 0 18px;color:#64748b;font-size:18px;font-weight:700}
+    .passage-info .empty{color:#94a3b8;text-align:center;padding:30px 10px;font-weight:700}
+    .passage-preview{display:flex;justify-content:center;align-items:center;background:#f8fbff;border:2px dashed #bfdbfe;border-radius:24px;padding:18px;margin-bottom:14px;min-height:180px}
+    .passage-preview img{max-width:170px;max-height:170px;object-fit:contain}
+    .passage-ar-word{font-size:38px;font-weight:900;color:#2563eb;text-align:center}
+    .passage-translit{font-size:22px;color:#0f172a;text-align:center;font-style:italic;margin-top:6px}
+    .passage-def{margin-top:14px;background:#eff6ff;border-radius:18px;padding:14px 16px;font-size:20px;font-weight:700;color:#334155;text-align:center}
+    .passage-audio-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;background:#f8fbff;border:2px solid #dbeafe;border-radius:24px;padding:18px;margin:0 0 20px}
+    .passage-audio-label{font-size:18px;font-weight:800;color:#334155}
+    .passage-audio-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;color:#fff;border:none;border-radius:18px;padding:12px 18px;font-family:'Almarai',sans-serif;font-weight:800;cursor:pointer;transition:.2s}
+    .passage-audio-btn:hover{transform:translateY(-1px);filter:brightness(.96)}
+    .passage-audio-btn.play{background:#10b981}
+    .passage-audio-btn.pause{background:#f59e0b}
+    .passage-audio-btn.stop{background:#ef4444}
+    .passage-audio-btn.replay{background:#3b82f6}
+    .passage-progress{margin-top:16px;text-align:center;color:#475569;font-weight:800}
+    @media (max-width: 900px){
+      .passage-layout{grid-template-columns:1fr}
+      .passage-info{position:static}
+      .passage-text{font-size:14px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <h1>المطبخ - الأنشطة التفاعلية</h1>
+      <p>Bubbles in Arabic | الوحدة: kitchen-images</p>
+    </header>
+
+    <main class="slides">
+      <section class="slide active" id="slide-0">
+        <h2 class="solo-title">أهلاً بك 🌟</h2>
+        <div class="welcome-box">
+          <p class="big">
+            في هذا الدرس سنتعرّف على مفردات المطبخ، ثم نمارس الملاحظة والمقارنة، والربط، وإكمال الجمل الوظيفية الوظيفية، والتفكير الوصفي بطريقة تفاعلية ممتعة ومناسبة لطلاب PYP.
+          </p>
+          <div class="score-strip">
+            <div class="metric"><strong>21</strong><span>مفردات مستهدفة</span></div>
+            <div class="metric"><strong>11</strong><span>أنشطة رئيسية</span></div>
+            <div class="metric"><strong id="mini-score">0</strong><span>النقاط الحالية</span></div>
+          </div>
+          <div class="welcome-preview">
+            <img id="welcomeAvatar" src="https://raw.githubusercontent.com/bubblesinarabic/things-in-my-house/main/kitchen-images/kitchen-blender.png" alt="المطبخ">
+          </div>
+          <div class="name-entry">
+            <label for="studentName">اكتب اسمك للبدء</label>
+            <input id="studentName" class="name-input" type="text" placeholder="اكتب اسمك هنا..." oninput="updateStudentName()">
+            <div class="welcome-name" id="welcomeName">مرحباً بك</div>
+          </div>
+          <div class="welcome-controls">
+            <label class="upload-btn file" for="fileUpload"><i data-lucide="upload"></i> ارفع صورة</label>
+            <label class="upload-btn camera" for="cameraUpload"><i data-lucide="camera"></i> التقط صورة</label>
+            <input id="fileUpload" type="file" accept="image/*" style="display:none" onchange="handleStudentImage(event)">
+            <input id="cameraUpload" type="file" accept="image/*" capture="environment" style="display:none" onchange="handleStudentImage(event)">
+          </div>
+          <button class="start-btn" onclick="goToSlide(1)">🚀 ابدأ اللعب الآن</button>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-1">
+        <h2 class="solo-title">القائمة الرئيسية</h2>
+        <p class="instruction" style="text-align:center;">اختر النشاط الذي تريد تنفيذه.</p>
+        <div class="menu-grid">
+          <div class="menu-card" onclick="goToSlide(2)"><i data-lucide="move"></i><div>إعادة ترتيب المطبخ</div></div>
+          <div class="menu-card" onclick="goToSlide(3)"><i data-lucide="scan-search"></i><div>ما الذي تغيّر؟</div></div>
+          <div class="menu-card" onclick="goToSlide(4)"><i data-lucide="map-pinned"></i><div>اكتشف أشياء المطبخ</div></div>
+          <div class="menu-card" onclick="goToSlide(5)"><i data-lucide="link"></i><div>ربط الصورة بالكلمة</div></div>
+          <div class="menu-card" onclick="goToSlide(6)"><i data-lucide="pencil-line"></i><div>إكمال الجمل الوظيفية</div></div>
+          <div class="menu-card" onclick="goToSlide(7)"><i data-lucide="type"></i><div>إعادة ترتيب الحروف</div></div>
+          <div class="menu-card" onclick="goToSlide(8)"><i data-lucide="circle-dot"></i><div>فرقع الفقاعات</div></div>
+          <div class="menu-card" onclick="goToSlide(9)"><i data-lucide="lightbulb"></i><div>من أنا؟ الألغاز</div></div>
+          <div class="menu-card" onclick="goToSlide(10)"><i data-lucide="book-open-text"></i><div>النص التفاعلي</div></div>
+          <div class="menu-card" onclick="goToSlide(11)"><i data-lucide="layers-3"></i><div>البطاقات التعليمية</div></div>
+          <div class="menu-card" onclick="goToSlide(12)"><i data-lucide="palette"></i><div>التلوين</div></div>
+          <div class="menu-card" onclick="goToSlide(13)"><i data-lucide="award"></i><div>النتيجة النهائية</div></div>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-2">
+        <div class="slide-head">
+          <h2>١) تمارين الملاحظة والمقارنة: إعادة ترتيب المطبخ</h2>
+          <button class="back-btn" onclick="goToSlide(1)"><i data-lucide="home"></i> القائمة</button>
+        </div>
+        <p class="instruction">اسحب الصور داخل المطبخ وأعد ترتيبها بالطريقة التي تريدها.</p>
+
+        <div class="rearrange-layout">
+          <div class="asset-bank">
+            <div class="asset-bank-title">عناصر المطبخ</div>
+            <div class="asset-bank-note">العناصر تظهر هنا على اليسار. اسحب أي صورة إلى داخل المطبخ.</div>
+            <div class="asset-bank-grid" id="assetBank"></div>
+          </div>
+
+          <div class="room-stage-wrap">
+            <div class="room-stage" id="roomStage"></div>
+            <div class="sandbox-note">اسحب العناصر من الجهة اليسرى إلى داخل المطبخ.</div>
+            <div class="transform-panel">
+              <span class="label" id="selectedItemLabel">العنصر المحدد: لا يوجد</span>
+              <button class="action-btn" onclick="resizeSelectedItem(-8)">تصغير −</button>
+              <button class="action-btn" onclick="resizeSelectedItem(8)">تكبير +</button>
+              <button class="action-btn" onclick="duplicateSelectedItem()">نسخ العنصر</button>
+              <button class="action-btn warn" onclick="removeSelectedItem()">حذف العنصر</button>
+            </div>
+            <div class="action-row">
+              <button class="action-btn warn" onclick="resetRearrange()">إعادة الترتيب</button>
+            </div>
+            <div class="feedback" id="rearrangeFeedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-3">
+        <div class="slide-head">
+          <h2>٢) ما الذي تغيّر في المطبخ؟</h2>
+          <button class="back-btn" onclick="goToSlide(1)"><i data-lucide="home"></i> القائمة</button>
+        </div>
+        <p class="instruction">انظر إلى الصورتين، ثم اختر الأشياء التي اختفت من المطبخ.</p>
+
+        <div class="compare-grid">
+          <div class="compare-card">
+            <div class="compare-label">الصورة ١</div>
+            <img src="https://raw.githubusercontent.com/bubblesinarabic/things-in-my-house/main/kitchen-images/kitchen-compare-image1.png" alt="الصورة الأولى">
+          </div>
+          <div class="compare-card">
+            <div class="compare-label">الصورة ٢</div>
+            <img src="https://raw.githubusercontent.com/bubblesinarabic/things-in-my-house/main/kitchen-images/kitchen-compare-image2.png" alt="الصورة الثانية">
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 style="margin-top:0;color:var(--secondary)">اضغط على صور الأشياء التي لم تعد موجودة في الصورة الثانية</h3>
+          <div class="compare-picks" id="compareChoices"></div>
+          <div class="action-row">
+            <button class="action-btn warn" onclick="resetCompare()">امسح</button>
+            <button class="action-btn primary" onclick="checkCompare()">تحقّق</button>
+          </div>
+          <div class="feedback" id="compareFeedback"></div>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-4">
+        <div class="slide-head">
+          <h2> اكتشف أشياء المطبخ</h2>
+          <button class="back-btn" onclick="goToSlide(1)"><i data-lucide="home"></i> القائمة</button>
+        </div>
+        <p class="instruction">اضغط على الدوائر الخضراء. ابحث عن أشياء المطبخ.</p>
+
+        <div class="hotspot-counter" id="hotspotCounter"></div>
+
+        <div class="hotspot-stage" id="hotspotStage">
+          <img src="https://raw.githubusercontent.com/bubblesinarabic/things-in-my-house/main/kitchen-images/kitchen-compare-image1.png" alt="المطبخ">
+        </div>
+
+        <div class="action-row">
+          <button class="action-btn warn" onclick="resetHotspot()">ابدأ من جديد</button>
+        </div>
+        <div class="feedback" id="hotspotFeedback"></div>
+      </section>
+
+      <section class="slide" id="slide-5">
+        <div class="slide-head">
+          <h2>٤) الربط البصري: صِل صورة المطبخ بالكلمة</h2>
+          <button class="back-btn" onclick="goToSlide(1)"><i data-lucide="home"></i> القائمة</button>
+        </div>
+        <p class="instruction">اضغط على الكلمة، ثم اضغط على الصورة الصحيحة من مفردات المطبخ.</p>
+
+        <div class="matching-wrapper">
+          <div class="word-list" id="wordList"></div>
+          <div class="image-grid" id="imageGrid"></div>
+        </div>
+        <div class="feedback" id="matchingFeedback"></div>
+      </section>
+
+      <section class="slide" id="slide-6">
+        <div class="slide-head">
+          <h2>٥) تمارين ملء الفراغ والسحب الوظيفية</h2>
+          <button class="back-btn" onclick="goToSlide(1)"><i data-lucide="home"></i> القائمة</button>
+        </div>
+        <p class="instruction">اسحب الكلمة إلى المكان الصحيح لإكمال الجملة الوظيفية.</p>
+
+        <div class="fill-bank" id="fillBank"></div>
+
+        <div id="sentencesWrap"></div>
+
+        <div class="action-row">
+          <button class="action-btn warn" onclick="resetFill()">إعادة المحاولة</button>
+          <button class="action-btn primary" onclick="checkFill()">تحقّق من الجمل</button>
+        </div>
+        <div class="feedback" id="fillFeedback"></div>
+      </section>
+
+      <section class="slide" id="slide-7">
+        <div class="slide-head">
+          <h2>٦) ترتيب حروف المطبخ لتكوين الكلمات</h2>
+          <button class="back-btn" onclick="goToSlide(1)"><i data-lucide="home"></i> القائمة</button>
+        </div>
+        <p class="instruction">رتّب الحروف لتكوين كلمة من مفردات المطبخ.</p>
+        <div class="letter-game">
+          <div class="letter-prompt" id="letterWordPrompt">كَوِّن الكلمة</div>
+          <div class="letter-clue" id="letterClue"></div>
+          <div class="letter-slots" id="letterSlots"></div>
+          <div class="letter-bank" id="letterBank"></div>
+          <div class="action-row">
+            <button class="action-btn warn" onclick="resetCurrentLetters()">مسح</button>
+            <button class="action-btn primary" onclick="checkLetters()">تحقّق</button>
+          </div>
+          <div class="feedback" id="letterFeedback"></div>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-8">
+        <div class="slide-head">
+          <h2>٧) فرقع الفقاعات: ابحث عن أداة المطبخ المطلوبة</h2>
+          <button class="back-btn" onclick="goToSlide(1)"><i data-lucide="home"></i> القائمة</button>
+        </div>
+        <p class="instruction">اقرأ التعليمات، ثم اضغط على الفقاعة التي تحتوي على صورة الأداة الصحيحة.</p>
+        <div class="bubble-panel">
+          <div class="bubble-instruction">ابحث عن هذه الصورة</div>
+          <div class="bubble-target" id="bubbleTargetWord">خلاط</div>
+          <div class="bubble-controls">
+            <label for="bubbleSpeed">سرعة حركة الفقاعات</label>
+            <input id="bubbleSpeed" class="bubble-speed" type="range" min="0.4" max="2.2" step="0.1" value="1" oninput="updateBubbleSpeed(this.value)">
+            <span class="bubble-speed-value" id="bubbleSpeedValue">1×</span>
+          </div>
+          <div class="bubble-arena" id="bubbleArena"></div>
+          <div class="action-row">
+            <button class="action-btn warn" onclick="resetBubbleGame()">إعادة النشاط</button>
+          </div>
+          <div class="feedback" id="bubbleFeedback"></div>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-9">
+        <div class="slide-head">
+          <h2>٨) تمارين الألغاز والتفكير الوصفي: من أنا؟</h2>
+          <button class="back-btn" onclick="goToSlide(1)"><i data-lucide="home"></i> القائمة</button>
+        </div>
+        <p class="instruction">اقرأ الوصف ثم اختر اسم الأداة أو الشيء الصحيح من المطبخ.</p>
+
+        <div class="riddle-single" id="riddleGrid"></div>
+        <div class="riddle-nav">
+          <button class="action-btn" id="riddlePrevBtn" onclick="changeRiddle(-1)">السابق</button>
+          <div class="flash-progress" id="riddleProgress">1 / 10</div>
+          <button class="action-btn primary" id="riddleNextBtn" onclick="changeRiddle(1)">التالي</button>
+        </div>
+        <div class="feedback" id="riddleFeedback"></div>
+      </section>
+
+      <section class="slide" id="slide-10">
+        <div class="slide-head">
+          <h2>٩) النص التفاعلي: اضغط على كلمة من المطبخ</h2>
+          <button class="back-btn" onclick="goToSlide(1)"><i data-lucide="home"></i> القائمة</button>
+        </div>
+        <p class="instruction">اقرأ النص. اضغط على الكلمة الزرقاء لتسمعها وتراها وتعرف معناها.</p>
+        <div class="passage-layout">
+          <div class="passage-card">
+            <div class="passage-helper">استمع للنص، ثم اضغط على الكلمات الزرقاء.</div>
+            <div class="passage-audio-controls">
+              <span class="passage-audio-label">التسجيل الصوتي:</span>
+              <button class="passage-audio-btn play" type="button" onclick="playPassageAudio()"><i data-lucide="play"></i> تشغيل</button>
+              <button class="passage-audio-btn pause" type="button" onclick="pausePassageAudio()"><i data-lucide="pause"></i> إيقاف مؤقت</button>
+              <button class="passage-audio-btn stop" type="button" onclick="stopPassageAudio()"><i data-lucide="square"></i> إيقاف</button>
+              <button class="passage-audio-btn replay" type="button" onclick="replayPassageAudio()"><i data-lucide="rotate-ccw"></i> إعادة</button>
+              
+              <div style="display:inline-flex; align-items:center; gap:8px; border-right: 2px solid #bfdbfe; padding-right: 12px; margin-right: 4px;">
+                <label for="passageSpeed" class="passage-audio-label" style="font-size:16px;">السرعة:</label>
+                <select id="passageSpeed" onchange="changePassageSpeed(this.value)" style="padding: 6px 12px; border-radius: 12px; border: 2px solid #bfdbfe; font-family: inherit; font-weight: 800; color: #1e293b; cursor: pointer; outline: none; background: #fff;">
+                  <option value="0.5">بطيء جداً (0.5×)</option>
+                  <option value="0.75">بطيء (0.75×)</option>
+                  <option value="1" selected>طبيعي (1×)</option>
+                  <option value="1.25">سريع (1.25×)</option>
+                  <option value="1.5">سريع جداً (1.5×)</option>
+                </select>
+              </div>
+
+            </div>
+            <div class="passage-text" id="passageText"></div>
+            <div class="passage-progress" id="passageProgress">الكلمات المكتشفة: 0 / 10</div>
+            <div class="feedback" id="passageFeedback"></div>
+          </div>
+          <div class="passage-info" id="passageInfo">
+            <div class="empty">اضغط على كلمة زرقاء من كلمات المطبخ.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-11">
+        <div class="slide-head">
+          <h2>١٠) البطاقات التعليمية</h2>
+          <button class="back-btn" onclick="goToSlide(1)"><i data-lucide="home"></i> القائمة</button>
+        </div>
+        <p class="instruction">اضغط على البطاقة لتقليبها ومراجعة مفردات المطبخ.</p>
+        <div class="flashcard-stage">
+          <div class="flashcard-box" id="flashcardBox" onclick="flipFlashcard()">
+            <div class="flashcard-inner" id="flashcardInner">
+              <div class="flash-face flash-front">
+                <div class="word" id="flashWord">خلاط</div>
+                <div class="sub">اضغط للقلب</div>
+              </div>
+              <div class="flash-face flash-back">
+                <img id="flashImg" src="" alt="بطاقة">
+                <div class="meaning" id="flashMeaning">Blender</div>
+              </div>
+            </div>
+          </div>
+          <div class="flash-nav">
+            <button class="action-btn" onclick="prevFlashcard()">السابق</button>
+            <div class="flash-progress" id="flashProgress">1 / 8</div>
+            <button class="action-btn primary" onclick="nextFlashcard()">التالي</button>
+          </div>
+          <div class="feedback" id="flashFeedback"></div>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-12">
+        <div class="slide-head">
+          <h2>١١) نشاط التلوين</h2>
+          <button class="back-btn" onclick="goToSlide(1)"><i data-lucide="home"></i> القائمة</button>
+        </div>
+        <p class="instruction">لوّن مشهد المطبخ بحرية باستخدام الفرشاة والألوان المختلفة.</p>
+        <div class="coloring-panel">
+          <div class="coloring-tools">
+            <span class="label">الألوان:</span>
+            <button class="color-chip active" style="background:#2563EB" onclick="setBrushColor(this,'#2563EB')"></button>
+            <button class="color-chip" style="background:#EF4444" onclick="setBrushColor(this,'#EF4444')"></button>
+            <button class="color-chip" style="background:#10B981" onclick="setBrushColor(this,'#10B981')"></button>
+            <button class="color-chip" style="background:#F59E0B" onclick="setBrushColor(this,'#F59E0B')"></button>
+            <button class="color-chip" style="background:#8B5CF6" onclick="setBrushColor(this,'#8B5CF6')"></button>
+            <button class="color-chip" style="background:#111827" onclick="setBrushColor(this,'#111827')"></button>
+            <span class="label">الأداة:</span>
+            <button class="action-btn tool-btn active" id="brushToolBtn" onclick="setColorTool('brush')">فرشاة</button>
+            <button class="action-btn tool-btn" id="eraserToolBtn" onclick="setColorTool('eraser')">ممحاة</button>
+            <button class="action-btn tool-btn" id="bucketToolBtn" onclick="setColorTool('bucket')">تعبئة</button>
+            <button class="action-btn" onclick="clearColoring()">مسح</button>
+            <button class="action-btn primary" onclick="finishColoring()">أنهيت التلوين</button>
+          </div>
+          <div class="coloring-wrap">
+            <svg class="coloring-sketch" viewBox="0 0 980 540" aria-label="Kitchen coloring sketch" role="img" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="0" width="980" height="540" fill="#ffffff"/>
+              <g stroke="#0f172a" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="40" y1="470" x2="940" y2="470"/>
+                <line x1="80" y1="60" x2="80" y2="470"/>
+                <line x1="900" y1="60" x2="900" y2="470"/>
+                <line x1="80" y1="60" x2="900" y2="60"/>
+
+                <rect x="470" y="90" width="235" height="150" rx="8"/>
+                <line x1="548" y1="90" x2="548" y2="240"/>
+                <line x1="626" y1="90" x2="626" y2="240"/>
+                <line x1="470" y1="140" x2="705" y2="140"/>
+                <line x1="470" y1="190" x2="705" y2="190"/>
+
+                <rect x="120" y="255" width="95" height="185" rx="6"/>
+                <ellipse cx="167" cy="205" rx="50" ry="15"/>
+                <rect x="118" y="205" width="98" height="95" rx="24"/>
+                <ellipse cx="167" cy="205" rx="48" ry="14"/>
+                <ellipse cx="167" cy="235" rx="48" ry="14"/>
+                <ellipse cx="167" cy="265" rx="48" ry="14"/>
+
+                <rect x="240" y="320" width="390" height="30" rx="6"/>
+                <rect x="240" y="350" width="135" height="92" rx="4"/>
+                <rect x="495" y="350" width="135" height="92" rx="4"/>
+                <rect x="380" y="342" width="100" height="112" rx="3"/>
+                <rect x="392" y="368" width="76" height="52" rx="2"/>
+                <circle cx="405" cy="355" r="4"/>
+                <circle cx="430" cy="355" r="4"/>
+                <circle cx="455" cy="355" r="4"/>
+
+                <rect x="242" y="272" width="88" height="48" rx="4"/>
+                <rect x="334" y="285" width="54" height="34" rx="5"/>
+                <path d="M362 285 Q365 260 382 260 Q399 260 402 285"/>
+                <rect x="508" y="282" width="44" height="36" rx="6"/>
+                <path d="M542 282 Q550 260 565 260 Q580 260 588 282"/>
+                <line x1="520" y1="318" x2="520" y2="336"/>
+                <line x1="540" y1="318" x2="540" y2="336"/>
+
+                <path d="M402 286 H470"/>
+                <line x1="470" y1="286" x2="470" y2="320"/>
+                <line x1="440" y1="286" x2="440" y2="320"/>
+
+                <rect x="615" y="250" width="26" height="80" rx="8"/>
+                <path d="M628 250 q30 0 30 20 v25"/>
+                <path d="M658 295 q-8 18 -28 18"/>
+
+                <line x1="294" y1="160" x2="294" y2="235"/>
+                <line x1="340" y1="160" x2="340" y2="235"/>
+                <line x1="386" y1="160" x2="386" y2="235"/>
+                <line x1="272" y1="160" x2="410" y2="160"/>
+                <line x1="268" y1="200" x2="412" y2="200"/>
+                <rect x="272" y="120" width="138" height="34" rx="4"/>
+                <rect x="286" y="130" width="20" height="24" rx="2"/>
+                <rect x="320" y="130" width="20" height="24" rx="2"/>
+                <rect x="354" y="130" width="20" height="24" rx="2"/>
+                <path d="M292 200 q0 20 0 40"/>
+                <path d="M340 200 q0 26 0 46"/>
+                <path d="M388 200 q0 18 0 38"/>
+
+                <rect x="690" y="250" width="105" height="180" rx="14"/>
+                <line x1="690" y1="338" x2="795" y2="338"/>
+                <line x1="730" y1="280" x2="730" y2="305"/>
+                <line x1="730" y1="360" x2="730" y2="385"/>
+
+                <rect x="705" y="380" width="155" height="64" rx="6"/>
+                <path d="M705 387 Q782 360 860 387"/>
+                <line x1="724" y1="444" x2="724" y2="470"/>
+                <line x1="840" y1="444" x2="840" y2="470"/>
+                <line x1="760" y1="380" x2="760" y2="470"/>
+
+                <path d="M718 300 Q748 250 778 300"/>
+                <path d="M730 298 q14 -28 28 0"/>
+                <path d="M760 298 q14 -28 28 0"/>
+
+                <rect x="758" y="315" width="24" height="48" rx="10"/>
+                <path d="M770 315 q14 -12 22 0"/>
+                <line x1="770" y1="363" x2="770" y2="378"/>
+
+                <path d="M820 370 q20 0 20 30 q0 28 -20 28 q-18 0 -18 -28 q0 -30 18 -30z"/>
+                <path d="M820 370 q-8 -18 0 -28 q10 10 10 22"/>
+
+                <rect x="386" y="80" width="48" height="38" rx="3"/>
+                <path d="M390 108 h40"/>
+                <path d="M400 100 q8 -14 16 0"/>
+              </g>
+            </svg>
+            <canvas id="colorScene" width="980" height="540"></canvas>
+          </div>
+          <div class="feedback" id="coloringFeedback"></div>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-13">
+        <div class="completion">
+          <div class="welcome-preview" style="width:120px;height:120px;margin-top:0;margin-bottom:16px;">
+            <img id="finalAvatar" src="https://raw.githubusercontent.com/bubblesinarabic/things-in-my-house/main/kitchen-images/kitchen-blender.png" alt="صورة الطالب">
+          </div>
+          <h2>أحسنت الإنجاز يا <span id="finalStudentName">صديقي</span> 👏</h2>
+          <i data-lucide="award" class="award"></i>
+          <div class="score-box">
+            النتيجة النهائية
+            <span class="num" id="finalScore">0 / 0</span>
+          </div>
+
+          <div id="certificateStatus" class="lock-note">أكمل جميع الأنشطة أولاً لفتح الشهادة.</div>
+
+          <div class="certificate-wrap">
+            <div class="certificate-card" id="certificateCard">
+              <img class="certificate-bg" src="https://raw.githubusercontent.com/bubblesinarabic/things-in-my-house/main/kitchen-images/kitchen-compare-image2.png" alt="خلفية الشهادة">
+              <div class="certificate-overlay" id="certificateArea">
+                <div class="certificate-badge"><i data-lucide="award"></i><span>شهادة إنجاز</span></div>
+                <div class="certificate-title">شهادة إتمام</div>
+                <div class="certificate-sub">تُمنح هذه الشهادة إلى</div>
+                <div class="certificate-name" id="certificateStudentName">صديقي</div>
+                <div class="certificate-score">النتيجة النهائية: <span id="certificateScore">0 / 0</span></div>
+                <div class="certificate-note">لإتمام أنشطة المطبخ بنجاح وتميّز</div>
+              </div>
+            </div>
+            <div class="certificate-actions">
+              <button class="action-btn primary" id="downloadCertificateBtn" onclick="downloadCertificate()" disabled>تنزيل الشهادة كصورة</button>
+              <button class="action-btn" onclick="goToSlide(1)">العودة إلى القائمة</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="footer" id="appFooter">
+      <button class="nav-btn" id="prevBtn" onclick="moveSlide(-1)" disabled>السابق</button>
+      <div class="dots" id="dots"></div>
+      <button class="nav-btn" id="nextBtn" onclick="moveSlide(1)">التالي</button>
+    </footer>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const slides = [...document.querySelectorAll('.slide')];
+    const totalSlides = slides.length;
+    const dotsWrap = document.getElementById('dots');
+    let currentSlide = 0;
+
+    for(let i=0;i<totalSlides;i++){
+      const d=document.createElement('div');
+      d.className='dot' + (i===0 ? ' active' : '');
+      dotsWrap.appendChild(d);
+    }
+    const dots=[...document.querySelectorAll('.dot')];
+
+    function updateNav(){
+      document.getElementById('appFooter').style.display = currentSlide === 0 ? 'none' : 'flex';
+      document.getElementById('prevBtn').disabled = currentSlide <= 1;
+      document.getElementById('nextBtn').disabled = currentSlide >= totalSlides-1;
+      dots.forEach((dot,idx)=>dot.classList.toggle('active', idx===currentSlide));
+      updateFinalScore();
+    }
+
+    function goToSlide(idx){
+      if(currentSlide === 10 && idx !== 10){
+        if(typeof stopPassageAudio === 'function') stopPassageAudio();
+      }
+      slides[currentSlide].classList.remove('active');
+      currentSlide = idx;
+      slides[currentSlide].classList.add('active');
+      updateNav();
+      lucide.createIcons();
+    }
+
+    function moveSlide(step){
+      let target = currentSlide + step;
+      if(target < 1) target = 1;
+      if(target > totalSlides-1) target = totalSlides-1;
+      goToSlide(target);
+    }
+
+    function updateStudentName(){
+      const name = document.getElementById('studentName')?.value.trim();
+      document.getElementById('welcomeName').textContent = name ? `مرحباً ${name}` : 'مرحباً بك';
+      const finalName = document.getElementById('finalStudentName');
+      if(finalName) finalName.textContent = name || 'صديقي';
+      const certName = document.getElementById('certificateStudentName');
+      if(certName) certName.textContent = name || 'صديقي';
+    }
+
+    function handleStudentImage(event){
+      const file = event.target.files && event.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const src = e.target.result;
+        const welcomeAvatar = document.getElementById('welcomeAvatar');
+        const finalAvatar = document.getElementById('finalAvatar');
+        if(welcomeAvatar) welcomeAvatar.src = src;
+        if(finalAvatar) finalAvatar.src = src;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ---- SCORE ENGINE ----
+    const scores = {
+      rearrange:0, compare:0, hotspot:0, matching:0, fill:0,
+      letters:0, bubbles:0, riddles:0, liveText:0, flashcards:0, coloring:0
+    };
+    const activityDone = {
+      rearrange:false, compare:false, hotspot:false, matching:false, fill:false,
+      letters:false, bubbles:false, riddles:false, liveText:false, flashcards:false, coloring:false
+    };
+    function totalScore(){
+      return scores.rearrange + scores.compare + scores.hotspot + scores.matching + scores.fill + scores.letters + scores.bubbles + scores.riddles + scores.liveText + scores.flashcards + scores.coloring;
+    }
+    function maxScore(){
+      return 1
+        + compareOptions.filter(o=>o.correct).length
+        + 3
+        + vocab.length
+        + fillSentences.length
+        + letterWords.length
+        + bubbleTargets.length
+        + riddles.length
+        + Object.keys(passageWords).length
+        + 1
+        + 1;
+    }
+    function areAllActivitiesDone(){
+      return Object.values(activityDone).every(Boolean);
+    }
+    function updateCertificateState(){
+      const status = document.getElementById('certificateStatus');
+      const downloadBtn = document.getElementById('downloadCertificateBtn');
+      const card = document.getElementById('certificateCard');
+      if(!status || !downloadBtn || !card) return;
+      if(areAllActivitiesDone()){
+        status.textContent = 'اكتملت جميع الأنشطة. شهادتك جاهزة الآن.';
+        status.className = 'feedback success';
+        card.style.opacity = '1';
+        downloadBtn.disabled = false;
+      }else{
+        const doneCount = Object.values(activityDone).filter(Boolean).length;
+        status.textContent = `أكمل جميع الأنشطة أولاً لفتح الشهادة. الإنجاز الحالي: ${doneCount} / 11`;
+        status.className = 'lock-note';
+        card.style.opacity = '.55';
+        downloadBtn.disabled = true;
+      }
+    }
+    function updateFinalScore(){
+      document.getElementById('mini-score').textContent = totalScore();
+      document.getElementById('finalScore').textContent = `${totalScore()} / ${maxScore()}`;
+      const certName = document.getElementById('certificateStudentName');
+      const certScore = document.getElementById('certificateScore');
+      if(certName) certName.textContent = document.getElementById('studentName')?.value.trim() || 'صديقي';
+      if(certScore) certScore.textContent = `${totalScore()} / ${maxScore()}`;
+      updateCertificateState();
+    }
+
+    
+// ---- AUDIO ENGINE ----
+const assetBase = 'https://raw.githubusercontent.com/bubblesinarabic/things-in-my-house/main/kitchen-images/';
+const assetSpeechLabels = {
+  'kitchen-basket.png':'سلة خبز',
+  'kitchen-blender.png':'خلاط',
+  'kitchen-bottle.png':'زجاجة',
+  'kitchen-cabinet.png':'خزانة',
+  'kitchen-chair.png':'كرسي',
+  'kitchen-chair2.png':'كرسي',
+  'kitchen-compare-image1.png':'المطبخ',
+  'kitchen-compare-image2.png':'المطبخ',
+  'kitchen-cup.png':'فنجان',
+  'kitchen-fridge.png':'ثلاجة',
+  'kitchen-header-background.png':'المطبخ',
+  'kitchen-knife.png':'سكين',
+  'kitchen-microwave.png':'ميكروويف',
+  'kitchen-mitten.png':'قفاز',
+  'kitchen-painting.png':'لوحة',
+  'kitchen-pan.png':'مقلاة',
+  'kitchen-plate.png':'صحن',
+  'kitchen-pot.png':'قدر',
+  'kitchen-rearrage.png':'المطبخ',
+  'kitchen-shelf.png':'رف',
+  'kitchen-sink.png':'مغسلة',
+  'kitchen-spoon.png':'ملعقة',
+  'kitchen-stove.png':'فرن',
+  'kitchen-table.png':'طاولة',
+  'kitchen-utensils.png':'أدوات مطبخ',
+  'kitchen-vase.png':'مزهرية',
+  'kitchen-water-cooler.png':'براد مياه',
+  'kitchen-waterhose.png':'صنبور',
+  'kitchen-window.png':'نافذة'
+};
+
+const assetAudioOverrides = {
+  'kitchen-basket.png':'kitchen-basket.mp3',
+  'kitchen-blender.png':'kitchen-blender.mp3',
+  'kitchen-bottle.png':'kitchen-bottle.mp3',
+  'kitchen-cabinet.png':'kitchen-cabinet.mp3',
+  'kitchen-chair.png':'kitchen-chair.mp3',
+  'kitchen-chair2.png':'kitchen-chair.mp3',
+  'kitchen-cup.png':'kitchen-cup.mp3',
+  'kitchen-fridge.png':'kitchen-fridge.mp3',
+  'kitchen-knife.png':'kitchen-knife.mp3',
+  'kitchen-microwave.png':'kitchen-microwave.mp3',
+  'kitchen-mitten.png':'kitchen-mitten.mp3',
+  'kitchen-pan.png':'kitchen-pan.mp3',
+  'kitchen-plate.png':'kitchen-plate.mp3',
+  'kitchen-pot.png':'kitchen-pot.mp3',
+  'kitchen-shelf.png':'kitchen-shelf.mp3',
+  'kitchen-sink.png':'kitchen-sink.mp3',
+  'kitchen-spoon.png':'kitchen-spoon.mp3',
+  'kitchen-stove.png':'kitchen-stove.mp3',
+  'kitchen-table.png':'kitchen-table.mp3',
+  'kitchen-vase.png':'kitchen-vase.mp3',
+  'kitchen-water-cooler.png':'kitchen-water-cooler.mp3',
+  'kitchen-waterhose.png':'kitchen-waterhose.mp3',
+  'kitchen-window.png':'kitchen-window.mp3'
+};
+
+const liveTextWordAudioOverrides = {
+  'المطبخ':'livetext-kitchen.mp3',
+  'الثلاجة':'livetext-kitchen-fridge.mp3',
+  'الفرن':'livetext-kitchen-stove.mp3',
+  'فرن':'livetext-kitchen-stove.mp3',
+  'الطاولة':'livetext-kitchen-table.mp3',
+  'طاولة':'livetext-kitchen-table.mp3',
+  'الأطباق':'livetext-kitchen-plates.mp3',
+  'الأكواب':'livetext-kitchen-glass.mp3',
+  'الفناجين':'livetext-kitchen-cup.mp3',
+  'الفنجان':'livetext-kitchen-cup.mp3',
+  'الشوك':'livetext-kitchen-fork.mp3',
+  'السكاكين':'livetext-kitchen-knife.mp3',
+  'السكين':'livetext-kitchen-knife.mp3',
+  'الموقد':'livetext-kitchen-mawked.mp3',
+  'القِدر':'livetext-kitchen-pot.mp3',
+  'القدر':'livetext-kitchen-pot.mp3',
+  'المقلاة':'livetext-kitchen-pan.mp3',
+  'الخزانة':'livetext-kitchen-cabinet.mp3',
+  'الصحون':'livetext-kitchen-plates.mp3',
+  'الصحن':'livetext-kitchen-plate.mp3',
+  'المغسلة':'livetext-kitchen-sink.mp3'
+};
+
+function playLiveTextWordAudio(word, fallbackImg){
+  const cleaned = String(word || '').replace(/[ً-ْٰ]/g,'').trim();
+  const audioFile = liveTextWordAudioOverrides[word] || liveTextWordAudioOverrides[cleaned];
+  if(audioFile){
+    const label = cleaned || word || '';
+    playAudioWithFallback(assetBase + audioFile, label, {rate:0.9});
+    return;
+  }
+  playAssetAudio(fallbackImg);
+}
+
+let passageSpeechRate = 1;
+let passageSpeechPaused = false;
+let passageSpeechActive = false;
+let activeAssetAudio = null;
+let passageAudio = null;
+const successAudioSrc = assetBase + 'ahsant.mp3';
+const tryAgainAudioSrc = assetBase + 'hawelmaraokhra.mp3';
+const passageAudioSrc = assetBase + 'kitchen-complete.mp3';
+
+function speakArabic(text, opts = {}){
+  if(!('speechSynthesis' in window) || !text) return;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'ar';
+  utter.dir = 'rtl';
+  utter.rate = opts.rate || 0.92;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utter);
+  return utter;
+}
+
+function stopActiveAssetAudio(){
+  if(activeAssetAudio){
+    activeAssetAudio.pause();
+    activeAssetAudio.currentTime = 0;
+    activeAssetAudio = null;
+  }
+}
+
+function playAudioWithFallback(src, fallbackText, opts = {}){
+  stopActiveAssetAudio();
+  if('speechSynthesis' in window){
+    window.speechSynthesis.cancel();
+  }
+  const audio = new Audio(src);
+  activeAssetAudio = audio;
+  const fallback = ()=>{
+    if(activeAssetAudio === audio) activeAssetAudio = null;
+    if(fallbackText) speakArabic(fallbackText, opts);
+  };
+  audio.addEventListener('ended', ()=>{
+    if(activeAssetAudio === audio) activeAssetAudio = null;
+  }, { once:true });
+  audio.addEventListener('error', fallback, { once:true });
+  audio.play().catch(fallback);
+}
+
+function playPassageAudio() {
+  stopActiveAssetAudio();
+  if(!passageAudioSrc){
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(passageLines.join(' '));
+    utter.lang = 'ar';
+    utter.dir = 'rtl';
+    utter.rate = passageSpeechRate;
+    utter.onend = ()=>{ passageSpeechActive = false; passageSpeechPaused = false; };
+    utter.onpause = ()=>{ passageSpeechPaused = true; };
+    utter.onresume = ()=>{ passageSpeechPaused = false; };
+    passageSpeechActive = true;
+    passageSpeechPaused = false;
+    window.speechSynthesis.speak(utter);
+    return;
+  }
+  if(passageAudio && passageAudio.paused && passageSpeechPaused){
+    passageAudio.play().catch(()=>{});
+    passageSpeechPaused = false;
+    passageSpeechActive = true;
+    return;
+  }
+  stopPassageAudio();
+  passageAudio = new Audio(passageAudioSrc);
+  passageAudio.playbackRate = passageSpeechRate;
+  passageAudio.addEventListener('ended', ()=>{
+    passageSpeechActive = false;
+    passageSpeechPaused = false;
+  }, { once:true });
+  passageAudio.addEventListener('error', ()=>{
+    passageAudio = null;
+    if(!('speechSynthesis' in window)) return;
+    const utter = new SpeechSynthesisUtterance(passageLines.join(' '));
+    utter.lang = 'ar';
+    utter.dir = 'rtl';
+    utter.rate = passageSpeechRate;
+    utter.onend = ()=>{ passageSpeechActive = false; passageSpeechPaused = false; };
+    utter.onpause = ()=>{ passageSpeechPaused = true; };
+    utter.onresume = ()=>{ passageSpeechPaused = false; };
+    passageSpeechActive = true;
+    window.speechSynthesis.speak(utter);
+  }, { once:true });
+  passageAudio.play().then(()=>{
+    passageSpeechActive = true;
+    passageSpeechPaused = false;
+  }).catch(()=>{
+    passageAudio = null;
+    if(!('speechSynthesis' in window)) return;
+    const utter = new SpeechSynthesisUtterance(passageLines.join(' '));
+    utter.lang = 'ar';
+    utter.dir = 'rtl';
+    utter.rate = passageSpeechRate;
+    utter.onend = ()=>{ passageSpeechActive = false; passageSpeechPaused = false; };
+    utter.onpause = ()=>{ passageSpeechPaused = true; };
+    utter.onresume = ()=>{ passageSpeechPaused = false; };
+    passageSpeechActive = true;
+    window.speechSynthesis.speak(utter);
+  });
+}
+function pausePassageAudio() {
+  if(activeAssetAudio && !activeAssetAudio.paused){
+    activeAssetAudio.pause();
+  }
+  if(passageAudio && !passageAudio.paused){
+    passageAudio.pause();
+    passageSpeechPaused = true;
+    passageSpeechActive = false;
+    return;
+  }
+  if('speechSynthesis' in window && window.speechSynthesis.speaking){
+    window.speechSynthesis.pause();
+    passageSpeechPaused = true;
+    passageSpeechActive = false;
+  }
+}
+function stopPassageAudio() {
+  stopActiveAssetAudio();
+  if(passageAudio){
+    passageAudio.pause();
+    passageAudio.currentTime = 0;
+    passageAudio = null;
+  }
+  if('speechSynthesis' in window){
+    window.speechSynthesis.cancel();
+  }
+  passageSpeechPaused = false;
+  passageSpeechActive = false;
+}
+function replayPassageAudio() { stopPassageAudio(); playPassageAudio(); }
+function changePassageSpeed(rate) {
+  passageSpeechRate = parseFloat(rate || 1);
+  if(passageAudio) passageAudio.playbackRate = passageSpeechRate;
+}
+
+function playSuccessSound(){ playAudioWithFallback(successAudioSrc, 'أحسنت', {rate: 0.95}); }
+function playTryAgainSound(){ playAudioWithFallback(tryAgainAudioSrc, 'حاول مرة أخرى', {rate: 0.95}); }
+function playAssetAudio(img){
+  const label = assetSpeechLabels[img] || '';
+  if(!img){
+    if(label) speakArabic(label, {rate: 0.9});
+    return;
+  }
+  const audioFile = assetAudioOverrides[img];
+  if(audioFile){
+    const audioSrc = assetBase + audioFile;
+    playAudioWithFallback(audioSrc, label, {rate: 0.9});
+    return;
+  }
+  if(label) speakArabic(label, {rate: 0.9});
+}
+function playWordAudio(word){
+  if(word) speakArabic(word, {rate: 0.9});
+}
+
+const rearrangeItems = [
+      {id:'blender', label:'خلاط', img:'kitchen-blender.png'},
+      {id:'chair', label:'كرسي', img:'kitchen-chair.png'},
+      {id:'chair2', label:'كرسي', img:'kitchen-chair2.png'},
+      {id:'cabinet', label:'خزانة', img:'kitchen-cabinet.png'},
+      {id:'bottle', label:'زجاجة', img:'kitchen-bottle.png'},
+      {id:'plate', label:'صحن', img:'kitchen-plate.png'},
+      {id:'mitt', label:'قفاز', img:'kitchen-mitten.png'},
+      {id:'shelf', label:'رف', img:'kitchen-shelf.png'},
+      {id:'table', label:'طاولة', img:'kitchen-table.png'},
+      {id:'cup', label:'فنجان', img:'kitchen-cup.png'},
+      {id:'fridge', label:'ثلاجة', img:'kitchen-fridge.png'},
+      {id:'basket', label:'سلة خبز', img:'kitchen-basket.png'},
+      {id:'watercooler', label:'براد مياه', img:'kitchen-water-cooler.png'},
+      {id:'tap', label:'صنبور', img:'kitchen-waterhose.png'},
+      {id:'sink', label:'مغسلة', img:'kitchen-sink.png'},
+      {id:'spoon', label:'ملعقة', img:'kitchen-spoon.png'},
+      {id:'vase', label:'مزهرية', img:'kitchen-vase.png'},
+      {id:'knife', label:'سكين', img:'kitchen-knife.png'},
+      {id:'pot', label:'قدر', img:'kitchen-pot.png'},
+      {id:'pan', label:'مقلاة', img:'kitchen-pan.png'},
+      {id:'stove', label:'فرن', img:'kitchen-stove.png'},
+      {id:'microwave', label:'ميكروويف', img:'kitchen-microwave.png'}
+    ];
+
+    const compareOptions = [
+      {id:'mitt', word:'قفاز', img:'kitchen-mitten.png', correct:true},
+      {id:'spoon', word:'ملعقة', img:'kitchen-spoon.png', correct:true},
+      {id:'basket', word:'سلة خبز', img:'kitchen-basket.png', correct:true},
+      {id:'bottle', word:'زجاجة', img:'kitchen-bottle.png', correct:true},
+      {id:'chair', word:'كرسي', img:'kitchen-chair2.png', correct:true},
+      {id:'blender', word:'خلاط', img:'kitchen-blender.png', correct:false},
+      {id:'fridge', word:'ثلاجة', img:'kitchen-fridge.png', correct:false},
+      {id:'pot', word:'قدر', img:'kitchen-pot.png', correct:false}
+    ];
+
+    const hotspotOptions = [
+      {id:'watercooler', word:'براد مياه', x:15, y:59},
+      {id:'microwave', word:'ميكروويف', x:29, y:53},
+      {id:'pot', word:'قدر', x:38, y:53},
+      {id:'blender', word:'خلاط', x:52, y:53},
+      {id:'sink', word:'مغسلة', x:61, y:52},
+      {id:'fridge', word:'ثلاجة', x:76, y:57},
+      {id:'table', word:'طاولة', x:80, y:79},
+      {id:'chair', word:'كرسي', x:66, y:77},
+      {id:'vase', word:'مزهرية', x:78, y:66},
+      {id:'window', word:'نافذة', x:58, y:18}
+    ];
+
+    const vocab = [
+      {word:'خلاط', key:'blender', img:'kitchen-blender.png'},
+      {word:'كرسي', key:'chair', img:'kitchen-chair.png'},
+      {word:'خزانة', key:'cabinet', img:'kitchen-cabinet.png'},
+      {word:'زجاجة', key:'bottle', img:'kitchen-bottle.png'},
+      {word:'صحن', key:'plate', img:'kitchen-plate.png'},
+      {word:'قفاز', key:'mitt', img:'kitchen-mitten.png'},
+      {word:'رف', key:'shelf', img:'kitchen-shelf.png'},
+      {word:'طاولة', key:'table', img:'kitchen-table.png'},
+      {word:'فنجان', key:'cup', img:'kitchen-cup.png'},
+      {word:'ثلاجة', key:'fridge', img:'kitchen-fridge.png'},
+      {word:'سلة خبز', key:'basket', img:'kitchen-basket.png'},
+      {word:'براد مياه', key:'watercooler', img:'kitchen-water-cooler.png'},
+      {word:'صنبور', key:'tap', img:'kitchen-waterhose.png'},
+      {word:'مغسلة', key:'sink', img:'kitchen-sink.png'},
+      {word:'ملعقة', key:'spoon', img:'kitchen-spoon.png'},
+      {word:'مزهرية', key:'vase', img:'kitchen-vase.png'},
+      {word:'سكين', key:'knife', img:'kitchen-knife.png'}
+    ];
+
+    const fillWords = ['صحن','سكين','ثلاجة','مقلاة','فرن','مغسلة','خلاط','فنجان'];
+    const fillSentences = [
+      {text:['أضع الطعام في الـ',' لتقديمه على الطاولة.' ], answer:'صحن', img:'kitchen-plate.png', hint:'تلميح: أقدّم فيه الطعام.'},
+      {text:['أقطع الخبز أو الفاكهة باستخدام الـ','.' ], answer:'سكين', img:'kitchen-knife.png', hint:'تلميح: أداة حادة في المطبخ.'},
+      {text:['أحفظ الحليب والخضار باردة داخل الـ','.' ], answer:'ثلاجة', img:'kitchen-fridge.png', hint:'تلميح: تحفظ الطعام طازجًا.'},
+      {text:['أطبخ البيض أو الخضار في الـ','.' ], answer:'مقلاة', img:'kitchen-pan.png', hint:'تلميح: أضعها فوق النار.'},
+      {text:['أخبز الطعام أو أسخّنه داخل الـ','.' ], answer:'فرن', img:'kitchen-stove.png', hint:'تلميح: أستخدمه للطهي والخبز.'},
+      {text:['أغسل الصحون في الـ','.' ], answer:'مغسلة', img:'kitchen-sink.png', hint:'تلميح: يوجد قربها صنبور.'},
+      {text:['أخلط العصير باستخدام الـ','.' ], answer:'خلاط', img:'kitchen-blender.png', hint:'تلميح: أداة كهربائية للخلط.'},
+      {text:['أشرب الشاي أو الحليب من الـ','.' ], answer:'فنجان', img:'kitchen-cup.png', hint:'تلميح: كوب صغير للمشروبات.'}
+    ];
+
+    const riddles = [
+      {q:'أنا أداة تحفظ الطعام طازجًا وباردًا طوال اليوم. من أنا؟', a:'ثلاجة', hint:'تلميح: أفتح بابي لأرى الطعام والشراب.', img:'kitchen-fridge.png', options:['ثلاجة','طاولة','ملعقة']},
+      {q:'أنا أداة أستخدمها لقطع الخبز أو الفاكهة. من أنا؟', a:'سكين', hint:'تلميح: يجب استعمالي بحذر.', img:'kitchen-knife.png', options:['سكين','فنجان','مغسلة']},
+      {q:'أنا أداة أضع فيها الطعام عند التقديم. من أنا؟', a:'صحن', hint:'تلميح: أكون مسطحًا ومستديرًا غالبًا.', img:'kitchen-plate.png', options:['صحن','خلاط','كرسي']},
+      {q:'أنا أداة كهربائية أخلط العصير أو الحساء بسرعة. من أنا؟', a:'خلاط', hint:'تلميح: أحتاج إلى الكهرباء لأعمل.', img:'kitchen-blender.png', options:['خلاط','مقلاة','رف']},
+      {q:'أنا مكان أغسل فيه الصحون والخضار. من أنا؟', a:'مغسلة', hint:'تلميح: يوجد فوقي صنبور.', img:'kitchen-sink.png', options:['مغسلة','ثلاجة','مزهرية']},
+      {q:'أنا أداة أطبخ فيها الطعام على النار. من أنا؟', a:'مقلاة', hint:'تلميح: أطبخ في داخلي البيض والخضار.', img:'kitchen-pan.png', options:['مقلاة','فنجان','زجاجة']},
+      {q:'أنا أداة أجلس عليها عند الطاولة في المطبخ. من أنا؟', a:'كرسي', hint:'تلميح: أستخدمها للجلوس.', img:'kitchen-chair.png', options:['كرسي','سكين','صنبور']},
+      {q:'أنا شيء أضع فيه الزهور ليبدو المكان أجمل. من أنا؟', a:'مزهرية', hint:'تلميح: أزيّن الطاولة أو الرف.', img:'kitchen-vase.png', options:['مزهرية','ثلاجة','سلة خبز']}
+    ];
+
+    const letterWords = [
+      {word:'خلاط', clue:'أخلط به العصير في المطبخ.'},
+      {word:'ثلاجة', clue:'أحفظ فيها الطعام بارداً.'},
+      {word:'سكين', clue:'أستخدمه لتقطيع الطعام.'},
+      {word:'صحن', clue:'أقدّم فيه الطعام.'},
+      {word:'فنجان', clue:'أشرب منه الشاي أو الحليب.'},
+      {word:'مغسلة', clue:'أغسل فيها الصحون.'},
+      {word:'مقلاة', clue:'أطبخ فيها فوق النار.'},
+      {word:'كرسي', clue:'أجلس عليه قرب الطاولة.'}
+    ];
+
+    const bubbleTargets = [
+      {word:'خلاط', img:'kitchen-blender.png'},
+      {word:'كرسي', img:'kitchen-chair.png'},
+      {word:'خزانة', img:'kitchen-cabinet.png'},
+      {word:'زجاجة', img:'kitchen-bottle.png'},
+      {word:'صحن', img:'kitchen-plate.png'},
+      {word:'قفاز', img:'kitchen-mitten.png'},
+      {word:'رف', img:'kitchen-shelf.png'},
+      {word:'طاولة', img:'kitchen-table.png'},
+      {word:'فنجان', img:'kitchen-cup.png'},
+      {word:'ثلاجة', img:'kitchen-fridge.png'},
+      {word:'سلة خبز', img:'kitchen-basket.png'},
+      {word:'براد مياه', img:'kitchen-water-cooler.png'},
+      {word:'صنبور', img:'kitchen-waterhose.png'},
+      {word:'مغسلة', img:'kitchen-sink.png'},
+      {word:'ملعقة', img:'kitchen-spoon.png'},
+      {word:'مزهرية', img:'kitchen-vase.png'},
+      {word:'سكين', img:'kitchen-knife.png'},
+      {word:'قدر', img:'kitchen-pot.png'},
+      {word:'مقلاة', img:'kitchen-pan.png'},
+      {word:'فرن', img:'kitchen-stove.png'},
+      {word:'ميكروويف', img:'kitchen-microwave.png'}
+    ];
+
+    const flashcards = [
+      {word:'خلاط', meaning:'Blender', img:'kitchen-blender.png'},
+      {word:'كرسي', meaning:'Chair', img:'kitchen-chair.png'},
+      {word:'خزانة', meaning:'Cabinet', img:'kitchen-cabinet.png'},
+      {word:'زجاجة', meaning:'Bottle', img:'kitchen-bottle.png'},
+      {word:'صحن', meaning:'Plate', img:'kitchen-plate.png'},
+      {word:'ثلاجة', meaning:'Fridge', img:'kitchen-fridge.png'},
+      {word:'مغسلة', meaning:'Sink', img:'kitchen-sink.png'},
+      {word:'سكين', meaning:'Knife', img:'kitchen-knife.png'}
+    ];
+
+    const passageWords = {
+      'المطبخ': {base:'المطبخ', translit:'al-matbakh', definition:'kitchen', img:'kitchen-compare-image1.png'},
+      'مطبخي': {base:'مطبخي', translit:'matbakhi', definition:'my kitchen', img:'kitchen-compare-image1.png'},
+      'المطبخي': {base:'المطبخي', translit:'al-matbakhi', definition:'my kitchen', img:'kitchen-compare-image1.png'},
+      'الثلاجة': {base:'الثلاجة', translit:'ath-thallajah', definition:'fridge', img:'kitchen-fridge.png'},
+      'الفرن': {base:'الفرن', translit:'al-furn', definition:'oven', img:'kitchen-stove.png'},
+      'الطاولة': {base:'الطاولة', translit:'at-tawilah', definition:'table', img:'kitchen-table.png'},
+      'الأطباق': {base:'الأطباق', translit:'al-atbaaq', definition:'plates', img:'kitchen-plate.png'},
+      'الملاعق': {base:'الملاعق', translit:'al-malaa' + 'iq', definition:'spoons', img:'kitchen-spoon.png'},
+      'الشوك': {base:'الشوك', translit:'ash-shawk', definition:'forks', img:'kitchen-utensils.png'},
+      'السكاكين': {base:'السكاكين', translit:'as-sakakeen', definition:'knives', img:'kitchen-knife.png'},
+      'الموقد': {base:'الموقد', translit:'al-mawqid', definition:'stove', img:'kitchen-stove.png'},
+      'القِدر': {base:'القِدر', translit:'al-qidr', definition:'pot', img:'kitchen-pot.png'},
+      'المقلاة': {base:'المقلاة', translit:'al-miqlah', definition:'pan', img:'kitchen-pan.png'},
+      'الخزانة': {base:'الخزانة', translit:'al-khizanah', definition:'cabinet', img:'kitchen-cabinet.png'},
+      'الأكواب': {base:'الأكواب', translit:'al-akwaab', definition:'cups', img:'kitchen-cup.png'},
+      'الفناجين': {base:'الفناجين', translit:'al-fanaajeen', definition:'cups', img:'kitchen-cup.png'},
+      'الصحون': {base:'الصحون', translit:'as-suhuwn', definition:'plates', img:'kitchen-plate.png'},
+      'المغسلة': {base:'المغسلة', translit:'al-maghsalah', definition:'sink', img:'kitchen-sink.png'},
+      'الماء': {base:'الماء', translit:'al-maa', definition:'water', img:'kitchen-water-cooler.png'},
+      'الصابون': {base:'الصابون', translit:'as-saaboon', definition:'soap', img:'kitchen-bottle.png'}
+    };
+    const passageLines = [
+      'عندما أدخل المطبخ، أجد أشياء كثيرة ومثيرة للاهتمام!',
+      'أجد الثلاجة الكبيرة التي تحفظ طعامنا باردًا وطازجًا. وبجانبها الفرن الذي نخبز فيه الخبز والكعك اللذيذ.',
+      'على الطاولة أجد الأطباق والملاعق والشوك والسكاكين. نستخدمها كل يوم عند تناول الطعام.',
+      'فوق الموقد يوجد القِدر الكبير لطهي الحساء، والمقلاة لقلي البيض والخضروات.',
+      'في الخزانة أجد الأكواب والفناجين والصحون مرتبةً بشكل جميل.',
+      'عند المغسلة نغسل أيدينا قبل الأكل وبعده، ونغسل الأطباق بالماء والصابون.',
+      'المطبخ مليء بالأدوات المفيدة التي تساعد عائلتنا كل يوم — هل تعرف ما وظيفة كل أداة؟'
+    ];
+
+    const wordAssetMap = Object.fromEntries([
+      ...vocab.map(v=>[v.word, v.img]),
+      ...fillSentences.map(v=>[v.answer, v.img]),
+      ...riddles.map(v=>[v.a, v.img]),
+      ...bubbleTargets.map(v=>[v.word, v.img]),
+      ...flashcards.map(v=>[v.word, v.img]),
+      ...Object.entries(passageWords).map(([k,v])=>[k, v.img]),
+      ['المطبخ','kitchen-compare-image1.png'],
+      ['مطبخي','kitchen-compare-image1.png'],
+      ['بُرّاد مياه','kitchen-water-cooler.png'],
+      ['براد مياه','kitchen-water-cooler.png'],
+      ['المغسلة','kitchen-sink.png'],
+      ['الفنجان','kitchen-cup.png'],
+      ['فنجاناً','kitchen-cup.png'],
+      ['فنجانا','kitchen-cup.png'],
+      ['الخلّاط','kitchen-blender.png'],
+      ['القِدر','kitchen-pot.png'],
+      ['المقلاة','kitchen-pan.png'],
+      ['الفرن','kitchen-stove.png'],
+      ['الميكروويف','kitchen-microwave.png'],
+      ['الثلاجة','kitchen-fridge.png'],
+      ['الصحن','kitchen-plate.png'],
+      ['الملعقة','kitchen-spoon.png'],
+      ['السكين','kitchen-knife.png'],
+      ['القفاز','kitchen-mitten.png'],
+      ['الصنبور','kitchen-waterhose.png'],
+      ['سلّة خبز','kitchen-basket.png'],
+      ['كراسٍ','kitchen-chair.png'],
+      ['نافذة','kitchen-window.png']
+    ]);
+
+    function playWordAudio(word){
+      const img = wordAssetMap[word];
+      if(img) playAssetAudio(img);
+    }
+
+    // ---- REARRANGE ----
+    const roomStage = document.getElementById('roomStage');
+    const assetBank = document.getElementById('assetBank');
+    let selectedRearrangeItem = null;
+    let placedItemsCount = 0;
+
+    function updateSelectedLabel(){
+      document.getElementById('selectedItemLabel').textContent = selectedRearrangeItem
+        ? `العنصر المحدد: ${selectedRearrangeItem.dataset.label}`
+        : 'العنصر المحدد: لا يوجد';
+    }
+
+    function clearSelection(){
+      roomStage.querySelectorAll('.free-item.selected').forEach(el=>el.classList.remove('selected'));
+      selectedRearrangeItem = null;
+      updateSelectedLabel();
+    }
+
+    function selectItem(el){
+      roomStage.querySelectorAll('.free-item.selected').forEach(node=>node.classList.remove('selected'));
+      selectedRearrangeItem = el;
+      el.classList.add('selected');
+      updateSelectedLabel();
+    }
+
+    function createPlacedItem(item, xPercent=8, yPercent=10, widthPercent=16){
+      const el = document.createElement('div');
+      el.className = 'free-item';
+      el.dataset.id = item.id;
+      el.dataset.label = item.label;
+      el.dataset.instance = `${item.id}-${Date.now()}-${Math.random().toString(16).slice(2,7)}`;
+      el.style.left = xPercent + '%';
+      el.style.top = yPercent + '%';
+      el.style.width = widthPercent + '%';
+      el.innerHTML = `<img src="${assetBase+item.img}" alt="${item.label}"><span class="resize-handle"></span>`;
+      enableFreeDrag(el, roomStage);
+      el.addEventListener('pointerdown', ()=>selectItem(el));
+      roomStage.appendChild(el);
+      selectItem(el);
+      placedItemsCount++;
+      return el;
+    }
+
+    function renderRearrangeBank(){
+      activityDone.rearrange = false;
+      assetBank.innerHTML = '';
+      roomStage.innerHTML = '';
+      clearSelection();
+      placedItemsCount = 0;
+      rearrangeItems.forEach(item=>{
+        const card = document.createElement('div');
+        card.className = 'bank-item';
+        card.innerHTML = `<img src="${assetBase+item.img}" alt="${item.label}"><span class="word-with-audio">${item.label}<button class="audio-mini" type="button" onclick="event.stopPropagation(); playAssetAudio('${item.img}')"><i data-lucide="volume-2"></i></button></span>`;
+        card.addEventListener('click', ()=>{
+          const placed = createPlacedItem(item, 6 + (placedItemsCount % 4) * 10, 8 + (placedItemsCount % 3) * 12, item.id.includes('pillow') ? 8 : 16);
+          constrainItem(placed);
+          updateRearrangeFeedback();
+        });
+        let ghost = null;
+        function onDown(e){
+          if(e.pointerType==='mouse' && e.button!==0) return;
+          e.preventDefault();
+          const stageRect = roomStage.getBoundingClientRect();
+          const itemEl = createPlacedItem(item, 6, 8, item.id.includes('pillow') ? 8 : 16);
+          ghost = itemEl;
+          const move = ev=>{
+            const x = ((ev.clientX - stageRect.left) / stageRect.width) * 100;
+            const y = ((ev.clientY - stageRect.top) / stageRect.height) * 100;
+            ghost.style.left = Math.max(0, Math.min(100, x)) + '%';
+            ghost.style.top = Math.max(0, Math.min(100, y)) + '%';
+            constrainItem(ghost);
+          };
+          const up = ev=>{
+            window.removeEventListener('pointermove', move);
+            window.removeEventListener('pointerup', up);
+            constrainItem(ghost);
+            updateRearrangeFeedback();
+          };
+          window.addEventListener('pointermove', move);
+          window.addEventListener('pointerup', up);
+          move(e);
+        }
+        card.addEventListener('pointerdown', onDown);
+        assetBank.appendChild(card);
+        lucide.createIcons({root: card});
+      });
+      updateRearrangeFeedback();
+    }
+
+    function updateRearrangeFeedback(){
+      const fb = document.getElementById('rearrangeFeedback');
+      fb.textContent = roomStage.querySelectorAll('.free-item').length
+        ? 'رائع! يمكنك متابعة ترتيب المطبخ بحرية، مع سحب العناصر وتغيير حجمها.'
+        : 'ابدأ بسحب العناصر من الجهة اليسرى إلى داخل المطبخ.';
+      fb.className = 'feedback';
+      scores.rearrange = roomStage.querySelectorAll('.free-item').length ? 1 : 0;
+      activityDone.rearrange = scores.rearrange > 0;
+      updateFinalScore();
+    }
+
+    function constrainItem(el){
+      const cRect = roomStage.getBoundingClientRect();
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+      let leftPx = (parseFloat(el.style.left)||0) / 100 * cRect.width;
+      let topPx = (parseFloat(el.style.top)||0) / 100 * cRect.height;
+      leftPx = Math.max(0, Math.min(cRect.width - w, leftPx));
+      topPx = Math.max(0, Math.min(cRect.height - h, topPx));
+      el.style.left = (leftPx / cRect.width) * 100 + '%';
+      el.style.top = (topPx / cRect.height) * 100 + '%';
+    }
+
+    function resizeItem(el, delta){
+      if(!el) return;
+      const current = parseFloat(el.style.width) || 16;
+      const next = Math.max(6, Math.min(36, current + delta));
+      el.style.width = next + '%';
+      constrainItem(el);
+    }
+
+    function resizeSelectedItem(delta){
+      if(!selectedRearrangeItem) return;
+      resizeItem(selectedRearrangeItem, delta);
+    }
+
+    function duplicateSelectedItem(){
+      if(!selectedRearrangeItem) return;
+      const item = rearrangeItems.find(x=>x.id===selectedRearrangeItem.dataset.id);
+      const width = parseFloat(selectedRearrangeItem.style.width)||16;
+      const left = (parseFloat(selectedRearrangeItem.style.left)||0) + 3;
+      const top = (parseFloat(selectedRearrangeItem.style.top)||0) + 3;
+      const copy = createPlacedItem(item, left, top, width);
+      constrainItem(copy);
+      updateRearrangeFeedback();
+    }
+
+    function removeSelectedItem(){
+      if(!selectedRearrangeItem) return;
+      selectedRearrangeItem.remove();
+      selectedRearrangeItem = null;
+      updateSelectedLabel();
+      updateRearrangeFeedback();
+    }
+
+    function enableFreeDrag(el, container){
+      let startX = 0, startY = 0, originLeft = 0, originTop = 0, startWidth = 0;
+      const handle = el.querySelector('.resize-handle');
+
+      function onPointerDown(e){
+        if(e.target === handle) return;
+        e.preventDefault();
+        selectItem(el);
+        el.classList.add('dragging');
+        const rect = el.getBoundingClientRect();
+        const cRect = container.getBoundingClientRect();
+        startX = e.clientX;
+        startY = e.clientY;
+        originLeft = rect.left - cRect.left;
+        originTop = rect.top - cRect.top;
+        el.setPointerCapture?.(e.pointerId);
+        el.addEventListener('pointermove', onPointerMove);
+        el.addEventListener('pointerup', onPointerUp);
+      }
+
+      function onPointerMove(e){
+        const cRect = container.getBoundingClientRect();
+        const maxLeft = cRect.width - el.offsetWidth;
+        const maxTop = cRect.height - el.offsetHeight;
+        let newLeft = originLeft + (e.clientX - startX);
+        let newTop = originTop + (e.clientY - startY);
+        newLeft = Math.max(0, Math.min(maxLeft, newLeft));
+        newTop = Math.max(0, Math.min(maxTop, newTop));
+        el.style.left = (newLeft / cRect.width) * 100 + '%';
+        el.style.top = (newTop / cRect.height) * 100 + '%';
+      }
+
+      function onPointerUp(e){
+        el.classList.remove('dragging');
+        el.releasePointerCapture?.(e.pointerId);
+        el.removeEventListener('pointermove', onPointerMove);
+        el.removeEventListener('pointerup', onPointerUp);
+      }
+
+      function onResizeDown(e){
+        e.stopPropagation();
+        e.preventDefault();
+        selectItem(el);
+        const cRect = container.getBoundingClientRect();
+        startX = e.clientX;
+        startWidth = parseFloat(el.style.width) || ((el.offsetWidth / cRect.width) * 100);
+        const move = ev=>{
+          const deltaPercent = ((ev.clientX - startX) / cRect.width) * 100;
+          const next = Math.max(6, Math.min(36, startWidth + deltaPercent));
+          el.style.width = next + '%';
+          constrainItem(el);
+        };
+        const up = ()=>{
+          window.removeEventListener('pointermove', move);
+          window.removeEventListener('pointerup', up);
+        };
+        window.addEventListener('pointermove', move);
+        window.addEventListener('pointerup', up);
+      }
+
+      el.addEventListener('pointerdown', onPointerDown);
+      handle.addEventListener('pointerdown', onResizeDown);
+      el.addEventListener('wheel', e=>{
+        if(!el.classList.contains('selected')) return;
+        e.preventDefault();
+        resizeItem(el, e.deltaY < 0 ? 2 : -2);
+      }, {passive:false});
+    }
+
+    function resetRearrange(){
+      renderRearrangeBank();
+    }
+
+    roomStage.addEventListener('pointerdown', (e)=>{ if(e.target === roomStage) clearSelection(); });
+    
+    // ---- COMPARE ----
+    const compareWrap = document.getElementById('compareChoices');
+    function renderCompare(){
+      if(!compareWrap) return;
+      compareWrap.innerHTML='';
+      compareOptions.forEach(opt=>{
+        const card=document.createElement('button');
+        card.type='button';
+        card.className='compare-pick';
+        card.dataset.id=opt.id;
+        card.innerHTML=`<img src="${assetBase+opt.img}" alt="${opt.word}"><span>${opt.word}</span>`;
+        card.addEventListener('click', ()=>card.classList.toggle('active'));
+        compareWrap.appendChild(card);
+        lucide.createIcons({root: card});
+      });
+      const fb = document.getElementById('compareFeedback');
+      if(fb){ fb.textContent=''; fb.className='feedback'; }
+    }
+    function resetCompare(){
+      scores.compare = 0;
+      activityDone.compare = false;
+      renderCompare();
+      updateFinalScore();
+    }
+    function checkCompare(){
+      let points=0, allGood=true;
+      const needed = compareOptions.filter(o=>o.correct).length;
+      [...compareWrap.children].forEach(card=>{
+        const opt = compareOptions.find(o=>o.id===card.dataset.id);
+        const selected = card.classList.contains('active');
+        card.classList.remove('correct','wrong');
+        if(selected && opt.correct){ card.classList.add('correct'); points++; }
+        if(selected && !opt.correct){ card.classList.add('wrong'); allGood=false; }
+        if(!selected && opt.correct){ allGood=false; }
+      });
+      const fb = document.getElementById('compareFeedback');
+      scores.compare = points;
+      activityDone.compare = allGood && points === needed;
+      if(allGood && points === needed){
+        fb.textContent='رائع! الأشياء التي اختفت هي: قفاز، وملعقة، وسلة خبز، وزجاجة، وكرسي.';
+        fb.className='feedback success';
+        playSuccessSound();
+      }else{
+        fb.textContent='حاول مرة أخرى. انظر إلى الصورتين ثم اختر الصور الصحيحة.';
+        fb.className='feedback error';
+        playTryAgainSound();
+      }
+      updateFinalScore();
+    }
+
+    // ---- HOTSPOT ----
+    const hotspotWrap = document.getElementById('hotspotStage');
+    const hotspotCounter = document.getElementById('hotspotCounter');
+    const hotspotFound = new Set();
+    function renderHotspot(){
+      if(!hotspotWrap) return;
+      [...hotspotWrap.querySelectorAll('.hotspot-dot,.hotspot-label')].forEach(el=>el.remove());
+      hotspotFound.clear();
+      hotspotOptions.forEach(opt=>{
+        const btn=document.createElement('button');
+        btn.type='button';
+        btn.className='hotspot-dot';
+        btn.dataset.id=opt.id;
+        btn.style.left = opt.x + '%';
+        btn.style.top = opt.y + '%';
+        btn.setAttribute('aria-label', opt.word);
+        btn.addEventListener('click', ()=>toggleHotspot(opt, btn));
+        hotspotWrap.appendChild(btn);
+      });
+      renderHotspotCounter();
+      const fb = document.getElementById('hotspotFeedback');
+      fb.textContent=`ابحث عن ${hotspotOptions.length} أشياء في الصورة.`;
+      fb.className='feedback';
+    }
+    function renderHotspotCounter(){
+      if(!hotspotCounter) return;
+      hotspotCounter.innerHTML='';
+      hotspotOptions.forEach(opt=>{
+        const chip=document.createElement('div');
+        chip.className='hotspot-chip' + (hotspotFound.has(opt.id) ? ' done' : '');
+        chip.textContent = hotspotFound.has(opt.id) ? `✓ ${opt.word}` : opt.word;
+        hotspotCounter.appendChild(chip);
+      });
+    }
+    function toggleHotspot(opt, btn){
+      if(hotspotFound.has(opt.id)) return;
+      hotspotFound.add(opt.id);
+      btn.classList.add('found');
+
+      hotspotWrap.querySelectorAll('.hotspot-label').forEach(label => label.remove());
+
+      const label=document.createElement('div');
+      label.className='hotspot-label';
+      label.dataset.id = opt.id;
+      label.style.left = opt.x + '%';
+      label.style.top = `calc(${opt.y}% - 42px)`;
+      label.innerHTML = `<span class="word-with-audio">${opt.word}<button class="audio-mini" type="button" onclick="event.stopPropagation(); playWordAudio('${opt.word}')"><i data-lucide="volume-2"></i></button></span>`;
+      hotspotWrap.appendChild(label);
+      lucide.createIcons({root: label});
+
+      playWordAudio(opt.word);
+      renderHotspotCounter();
+      const fb = document.getElementById('hotspotFeedback');
+      if(hotspotFound.size === hotspotOptions.length){
+        scores.hotspot = 3;
+        activityDone.hotspot = true;
+        fb.textContent='أحسنت! وجدت كل الأشياء في المطبخ.';
+        fb.className='feedback success';
+        playSuccessSound();
+      }else{
+        scores.hotspot = 0;
+        activityDone.hotspot = false;
+        fb.textContent=`ممتاز! وجدت ${hotspotFound.size} من ${hotspotOptions.length}.`;
+        fb.className='feedback success';
+      }
+      updateFinalScore();
+    }
+    function resetHotspot(){
+      scores.hotspot = 0;
+      activityDone.hotspot = false;
+      renderHotspot();
+      updateFinalScore();
+    }
+
+    // ---- MATCHING ----
+
+    // ---- MATCHING ----
+    let selectedWord = null;
+    const wordList = document.getElementById('wordList');
+    const imageGrid = document.getElementById('imageGrid');
+
+    function shuffle(arr){
+      return [...arr].sort(()=>Math.random()-0.5);
+    }
+
+    function renderMatching(){
+      wordList.innerHTML='';
+      imageGrid.innerHTML='';
+      shuffle(vocab).forEach(item=>{
+        const pill=document.createElement('button');
+        pill.className='word-pill';
+        pill.innerHTML=`<span class="word-with-audio">${item.word}<button class="audio-mini" type="button" onclick="event.stopPropagation(); playAssetAudio('${item.img}')"><i data-lucide="volume-2"></i></button></span>`;
+        pill.dataset.key=item.key;
+        pill.onclick=()=>{
+          if(pill.classList.contains('done')) return;
+          document.querySelectorAll('.word-pill').forEach(p=>p.classList.remove('selected'));
+          pill.classList.add('selected');
+          selectedWord = pill.dataset.key;
+        };
+        wordList.appendChild(pill);
+        lucide.createIcons({root: pill});
+      });
+
+      shuffle(vocab).forEach(item=>{
+        const card=document.createElement('div');
+        card.className='image-card';
+        card.dataset.key=item.key;
+        card.innerHTML=`<img src="${assetBase+item.img}" alt="${item.word}"><span>صورة</span>`;
+        card.onclick=()=>handleImageMatch(card);
+        imageGrid.appendChild(card);
+        lucide.createIcons({root: card});
+      });
+    }
+
+    function handleImageMatch(card){
+      if(card.classList.contains('done') || !selectedWord) return;
+      const pill = [...document.querySelectorAll('.word-pill')].find(p=>p.dataset.key===selectedWord);
+      if(card.dataset.key === selectedWord){
+        card.classList.add('done');
+        pill.classList.remove('selected');
+        pill.classList.add('done');
+        card.querySelector('span').textContent = pill.textContent;
+        selectedWord = null;
+      }else{
+        card.classList.add('shake');
+        playTryAgainSound();
+        setTimeout(()=>card.classList.remove('shake'),400);
+      }
+      const doneCount = document.querySelectorAll('.image-card.done').length;
+      scores.matching = doneCount;
+      const fb = document.getElementById('matchingFeedback');
+      if(doneCount === vocab.length){
+        fb.textContent='أحسنت! أنهيت ربط مفردات المطبخ بنجاح.';
+        fb.className='feedback success';
+        playSuccessSound();
+      }else{
+        fb.textContent=`المطابقات الصحيحة الحالية: ${doneCount} / ${vocab.length}`;
+        fb.className='feedback';
+      }
+      updateFinalScore();
+    }
+
+    // ---- FILL ----
+    const fillBank = document.getElementById('fillBank');
+    const sentencesWrap = document.getElementById('sentencesWrap');
+    let draggedFill = null;
+
+    function renderFill(){
+      activityDone.fill = false;
+      fillBank.innerHTML='';
+      sentencesWrap.innerHTML='';
+
+      fillWords.forEach(word=>{
+        const el=document.createElement('div');
+        el.className='fill-word';
+        el.draggable=true;
+        el.innerHTML=`<span class="word-with-audio">${word}<button class="audio-mini" type="button" onclick="event.stopPropagation(); playWordAudio('${word}')"><i data-lucide="volume-2"></i></button></span>`;
+        el.dataset.word=word;
+        el.addEventListener('dragstart', e=>{
+          draggedFill = el;
+          e.dataTransfer.setData('text/plain', word);
+        });
+        fillBank.appendChild(el);
+        lucide.createIcons({root: el});
+      });
+
+      fillSentences.forEach((s,idx)=>{
+        const line=document.createElement('div');
+        line.className='sentence';
+        line.innerHTML = `
+          <span>${idx+1}.</span>
+          <span>${s.text[0]}</span>
+          <div class="blank" data-answer="${s.answer}"></div>
+          <span>${s.text[1]}</span>
+          <span class="hint-chip image-only-hint"><span class="hint-media"><img src="${assetBase + s.img}" alt="${s.answer}"></span></span>
+        `;
+        const blank = line.querySelector('.blank');
+        blank.addEventListener('dragover', e=>e.preventDefault());
+        blank.addEventListener('drop', e=>{
+          e.preventDefault();
+          const word = e.dataTransfer.getData('text/plain');
+          if(!word) return;
+          if(blank.querySelector('.fill-word')) return;
+          const source = [...document.querySelectorAll('.fill-word')].find(x=>x.dataset.word===word);
+          if(!source) return;
+          blank.appendChild(source);
+          source.style.cursor='default';
+          source.draggable=false;
+          source.style.margin='0';
+        });
+        sentencesWrap.appendChild(line);
+        lucide.createIcons({root: line});
+      });
+    }
+
+    function resetFill(){
+      renderFill();
+      document.getElementById('fillFeedback').textContent='';
+      document.getElementById('fillFeedback').className='feedback';
+      scores.fill = 0;
+      updateFinalScore();
+    }
+
+    function checkFill(){
+      let correct=0;
+      document.querySelectorAll('.blank').forEach(blank=>{
+        blank.classList.remove('correct');
+        const placed = blank.querySelector('.fill-word')?.dataset.word;
+        if(placed === blank.dataset.answer){
+          blank.classList.add('correct');
+          correct++;
+        }
+      });
+      scores.fill = correct;
+      activityDone.fill = correct === fillSentences.length;
+      const fb = document.getElementById('fillFeedback');
+      if(correct === fillSentences.length){
+        fb.textContent='ممتاز! أكملت جميع الجمل بشكل صحيح.';
+        fb.className='feedback success';
+        playSuccessSound();
+      }else{
+        fb.textContent=`الإجابات الصحيحة الحالية: ${correct} / ${fillSentences.length}`;
+        fb.className='feedback error';
+        playTryAgainSound();
+      }
+      updateFinalScore();
+    }
+
+    // ---- LETTERS ----
+    const letterSlots = document.getElementById('letterSlots');
+    const letterBank = document.getElementById('letterBank');
+    let currentLetterIndex = 0;
+    let currentLetterAnswer = [];
+
+    function shuffleArray(arr){
+      return [...arr].sort(()=>Math.random()-0.5);
+    }
+
+    function renderLetterRound(){
+      if(currentLetterIndex === 0) activityDone.letters = false;
+      const round = letterWords[currentLetterIndex];
+      document.getElementById('letterWordPrompt').textContent = `الكلمة ${currentLetterIndex + 1} من ${letterWords.length}`;
+      document.getElementById('letterClue').innerHTML = `<span class="word-with-audio">${round.clue}<button class="audio-mini" type="button" onclick="playWordAudio('${round.word}')"><i data-lucide="volume-2"></i></button></span>`; lucide.createIcons({root: document.getElementById('letterClue')});
+      document.getElementById('letterFeedback').textContent = '';
+      document.getElementById('letterFeedback').className = 'feedback';
+      currentLetterAnswer = [];
+      letterSlots.innerHTML = '';
+      letterBank.innerHTML = '';
+      [...round.word].forEach(()=> {
+        const slot = document.createElement('div');
+        slot.className = 'letter-slot';
+        letterSlots.appendChild(slot);
+      });
+      shuffleArray([...round.word]).forEach((char, idx)=>{
+        const tile = document.createElement('button');
+        tile.className = 'letter-tile';
+        tile.textContent = char;
+        tile.dataset.index = idx;
+        tile.onclick = ()=>useLetterTile(tile, char);
+        letterBank.appendChild(tile);
+      });
+    }
+
+    function useLetterTile(tile, char){
+      if(tile.classList.contains('used')) return;
+      const slots = [...letterSlots.children];
+      const empty = slots.find(s=>!s.textContent);
+      if(!empty) return;
+      tile.classList.add('used');
+      empty.textContent = char;
+      empty.dataset.tileIndex = tile.dataset.index;
+      currentLetterAnswer.push({char, tileIndex: tile.dataset.index});
+    }
+
+    function resetCurrentLetters(){
+      renderLetterRound();
+    }
+
+    function checkLetters(){
+      const round = letterWords[currentLetterIndex];
+      const built = [...letterSlots.children].map(s=>s.textContent).join('');
+      const fb = document.getElementById('letterFeedback');
+      if(built === round.word){
+        fb.textContent = 'أحسنت! الكلمة صحيحة.';
+        fb.className = 'feedback success';
+        playSuccessSound();
+        scores.letters = Math.max(scores.letters, currentLetterIndex + 1);
+        if(currentLetterIndex + 1 >= letterWords.length) activityDone.letters = true;
+        updateFinalScore();
+        if(currentLetterIndex < letterWords.length - 1){
+          setTimeout(()=>{ currentLetterIndex++; renderLetterRound(); }, 900);
+        }else{
+          fb.textContent = 'رائع! أكملت جميع كلمات الحروف.';
+        }
+      }else{
+        fb.textContent = 'ليست الكلمة الصحيحة بعد. جرّب من جديد.';
+        fb.className = 'feedback error';
+        playTryAgainSound();
+      }
+    }
+
+    // ---- BUBBLES ----
+    const bubbleArena = document.getElementById('bubbleArena');
+    let bubbleRound = 0;
+    let bubbleSpeedMultiplier = 1;
+    let bubbleNodes = [];
+    let bubbleAnimationFrame = null;
+
+    function updateBubbleSpeed(val){
+      bubbleSpeedMultiplier = parseFloat(val);
+      document.getElementById('bubbleSpeedValue').textContent = `${bubbleSpeedMultiplier.toFixed(1).replace('.0','')}×`;
+    }
+
+    function stopBubbleAnimation(){
+      if(bubbleAnimationFrame) cancelAnimationFrame(bubbleAnimationFrame);
+      bubbleAnimationFrame = null;
+    }
+
+    function animateBubbles(){
+      const arenaRect = bubbleArena.getBoundingClientRect();
+      bubbleNodes.forEach(node=>{
+        if(node.el.classList.contains('popped')) return;
+        const maxX = bubbleArena.clientWidth - node.size;
+        const maxY = bubbleArena.clientHeight - node.size;
+        node.x += node.vx * bubbleSpeedMultiplier;
+        node.y += node.vy * bubbleSpeedMultiplier;
+        if(node.x <= 0 || node.x >= maxX){ node.vx *= -1; node.x = Math.max(0, Math.min(maxX, node.x)); }
+        if(node.y <= 0 || node.y >= maxY){ node.vy *= -1; node.y = Math.max(0, Math.min(maxY, node.y)); }
+        node.el.style.left = node.x + 'px';
+        node.el.style.top = node.y + 'px';
+      });
+      bubbleAnimationFrame = requestAnimationFrame(animateBubbles);
+    }
+
+    function renderBubbleRound(){
+      const fb = document.getElementById('bubbleFeedback');
+      fb.textContent = '';
+      fb.className = 'feedback';
+      stopBubbleAnimation();
+      bubbleNodes = [];
+      if(bubbleRound >= bubbleTargets.length){
+        document.getElementById('bubbleTargetWord').textContent = 'تم الإنجاز!';
+        bubbleArena.innerHTML = '';
+        fb.textContent = 'ممتاز! فرّقت جميع الفقاعات الصحيحة.';
+        fb.className = 'feedback success';
+        activityDone.bubbles = true;
+        updateFinalScore();
+        playSuccessSound();
+        return;
+      }
+      document.getElementById('bubbleTargetWord').innerHTML = `<span class="word-with-audio">${bubbleTargets[bubbleRound].word}<button class="audio-mini" type="button" onclick="playAssetAudio('${bubbleTargets[bubbleRound].img}')"><i data-lucide="volume-2"></i></button></span>`; lucide.createIcons({root: document.getElementById('bubbleTargetWord')});
+      bubbleArena.innerHTML = '';
+      const options = shuffleArray(bubbleTargets).slice(0,6);
+      if(!options.find(o=>o.word === bubbleTargets[bubbleRound].word)) options[0] = bubbleTargets[bubbleRound];
+      options.forEach((opt, idx)=>{
+        const b = document.createElement('button');
+        b.className = 'bubble';
+        const size = 106 + (idx % 3) * 10;
+        b.style.width = size + 'px';
+        b.style.height = size + 'px';
+        b.innerHTML = `<img src="${assetBase + opt.img}" alt="${opt.word}">`;
+        b.onclick = ()=>handleBubbleClick(b, opt);
+        bubbleArena.appendChild(b);
+        bubbleNodes.push({
+          el:b,
+          size,
+          x: 20 + idx * 80,
+          y: 20 + (idx % 2) * 120,
+          vx: (Math.random() * 1.2 + 0.6) * (idx % 2 ? 1 : -1),
+          vy: (Math.random() * 1.1 + 0.5) * (idx % 3 ? 1 : -1)
+        });
+      });
+      updateBubbleSpeed(document.getElementById('bubbleSpeed').value);
+      animateBubbles();
+    }
+
+    function handleBubbleClick(el, opt){
+      const target = bubbleTargets[bubbleRound];
+      const fb = document.getElementById('bubbleFeedback');
+      if(opt.word === target.word){
+        el.classList.add('popped');
+        scores.bubbles = bubbleRound + 1;
+        updateFinalScore();
+        fb.textContent = 'أحسنت! هذه هي الصورة الصحيحة.';
+        fb.className = 'feedback success';
+        playSuccessSound();
+        setTimeout(()=>{ bubbleRound++; renderBubbleRound(); }, 700);
+      }else{
+        el.classList.add('wrong');
+        setTimeout(()=>el.classList.remove('wrong'), 350);
+        fb.textContent = 'هذه ليست الصورة المطلوبة. حاول مرة أخرى.';
+        fb.className = 'feedback error';
+        playTryAgainSound();
+      }
+    }
+
+    function resetBubbleGame(){
+      bubbleRound = 0;
+      scores.bubbles = 0;
+      activityDone.bubbles = false;
+      updateFinalScore();
+      renderBubbleRound();
+    }
+
+    // ---- FLASHCARDS ----
+    let flashIndex = 0;
+    const flashSeen = new Set();
+    function updateFlashcard(){
+      const item = flashcards[flashIndex];
+      document.getElementById('flashcardBox').classList.remove('flipped');
+      document.getElementById('flashWord').innerHTML = `<span class="word-with-audio">${item.word}<button class="audio-mini" type="button" onclick="event.stopPropagation(); playAssetAudio('${item.img}')"><i data-lucide="volume-2"></i></button></span>`; lucide.createIcons({root: document.getElementById('flashWord')});
+      document.getElementById('flashImg').src = assetBase + item.img;
+      document.getElementById('flashImg').alt = item.word;
+      document.getElementById('flashMeaning').textContent = item.meaning;
+      document.getElementById('flashProgress').textContent = `${flashIndex + 1} / ${flashcards.length}`;
+      document.getElementById('flashFeedback').textContent = flashSeen.size === flashcards.length ? 'رائع! راجعت جميع بطاقات مفردات المطبخ.' : '';
+      if(flashSeen.size === flashcards.length){ scores.flashcards = 1; activityDone.flashcards = true; updateFinalScore(); }
+    }
+    function flipFlashcard(){
+      document.getElementById('flashcardBox').classList.toggle('flipped');
+      flashSeen.add(flashIndex);
+      if(flashSeen.size === flashcards.length){ scores.flashcards = 1; activityDone.flashcards = true; updateFinalScore(); document.getElementById('flashFeedback').textContent='رائع! راجعت جميع بطاقات مفردات المطبخ.'; playSuccessSound(); }
+    }
+    function nextFlashcard(){ flashIndex = (flashIndex + 1) % flashcards.length; updateFlashcard(); }
+    function prevFlashcard(){ flashIndex = (flashIndex - 1 + flashcards.length) % flashcards.length; updateFlashcard(); }
+
+    // ---- COLORING ----
+    const colorCanvas = document.getElementById('colorScene');
+    const colorCtx = colorCanvas.getContext('2d', { willReadFrequently:true });
+    const sketchSvg = document.querySelector('.coloring-sketch');
+    const boundaryCanvas = document.createElement('canvas');
+    boundaryCanvas.width = colorCanvas.width;
+    boundaryCanvas.height = colorCanvas.height;
+    const boundaryCtx = boundaryCanvas.getContext('2d', { willReadFrequently:true });
+    let brushColor = '#2563EB';
+    let colorTool = 'brush';
+    let isPainting = false;
+    let paintingStarted = false;
+
+    function getColorPos(e){
+      const rect = colorCanvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {x:(clientX-rect.left)*(colorCanvas.width/rect.width), y:(clientY-rect.top)*(colorCanvas.height/rect.height)};
+    }
+
+    function loadColoringBoundary(){
+      if(!sketchSvg) return;
+      const serialized = new XMLSerializer().serializeToString(sketchSvg);
+      const img = new Image();
+      img.onload = ()=>{
+        boundaryCtx.clearRect(0,0,boundaryCanvas.width,boundaryCanvas.height);
+        boundaryCtx.drawImage(img, 0, 0, boundaryCanvas.width, boundaryCanvas.height);
+      };
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(serialized);
+    }
+
+    function updateColorToolButtons(){
+      document.getElementById('brushToolBtn')?.classList.toggle('active', colorTool === 'brush');
+      document.getElementById('eraserToolBtn')?.classList.toggle('active', colorTool === 'eraser');
+      document.getElementById('bucketToolBtn')?.classList.toggle('active', colorTool === 'bucket');
+      colorCanvas.classList.toggle('bucket-mode', colorTool === 'bucket');
+      colorCanvas.classList.toggle('eraser-mode', colorTool === 'eraser');
+    }
+
+    function setColorTool(tool){
+      colorTool = tool;
+      updateColorToolButtons();
+    }
+
+    function setBrushColor(btn, color){
+      brushColor = color;
+      document.querySelectorAll('.color-chip').forEach(ch=>ch.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function startPaint(e){
+      if(colorTool === 'bucket'){
+        e.preventDefault();
+        bucketFillAtEvent(e);
+        return;
+      }
+      isPainting = true;
+      paintingStarted = true;
+      const pos = getColorPos(e);
+      colorCtx.beginPath();
+      colorCtx.moveTo(pos.x, pos.y);
+      drawPaint(e);
+    }
+
+    function drawPaint(e){
+      if(!isPainting || colorTool === 'bucket') return;
+      const pos = getColorPos(e);
+      colorCtx.lineWidth = 18;
+      colorCtx.lineCap = 'round';
+      colorCtx.lineJoin = 'round';
+      if(colorTool === 'eraser'){
+        colorCtx.globalCompositeOperation = 'destination-out';
+        colorCtx.strokeStyle = 'rgba(0,0,0,1)';
+      }else{
+        colorCtx.globalCompositeOperation = 'source-over';
+        colorCtx.strokeStyle = brushColor;
+      }
+      colorCtx.lineTo(pos.x,pos.y);
+      colorCtx.stroke();
+      colorCtx.beginPath();
+      colorCtx.moveTo(pos.x,pos.y);
+    }
+
+    function endPaint(){
+      isPainting = false;
+      colorCtx.beginPath();
+      colorCtx.globalCompositeOperation = 'source-over';
+    }
+
+    function hexToRgba(hex){
+      const clean = hex.replace('#','');
+      const value = clean.length === 3
+        ? clean.split('').map(ch => parseInt(ch + ch, 16))
+        : [parseInt(clean.slice(0,2),16), parseInt(clean.slice(2,4),16), parseInt(clean.slice(4,6),16)];
+      return [value[0], value[1], value[2], 255];
+    }
+
+    function colorsClose(data, offset, target, tolerance=18){
+      if(target[3] < 16) return data[offset+3] < 16;
+      return Math.abs(data[offset] - target[0]) <= tolerance
+        && Math.abs(data[offset+1] - target[1]) <= tolerance
+        && Math.abs(data[offset+2] - target[2]) <= tolerance
+        && Math.abs(data[offset+3] - target[3]) <= tolerance;
+    }
+
+    function isBoundary(boundaryData, offset){
+      const alpha = boundaryData[offset+3];
+      if(alpha < 20) return false;
+      const luminance = 0.2126 * boundaryData[offset] + 0.7152 * boundaryData[offset+1] + 0.0722 * boundaryData[offset+2];
+      return luminance < 245;
+    }
+
+    function bucketFillAtEvent(e){
+      const pos = getColorPos(e);
+      floodFill(Math.floor(pos.x), Math.floor(pos.y), hexToRgba(brushColor));
+    }
+
+    function floodFill(startX, startY, fillColor){
+      const width = colorCanvas.width;
+      const height = colorCanvas.height;
+      if(startX < 0 || startY < 0 || startX >= width || startY >= height) return;
+
+      const image = colorCtx.getImageData(0, 0, width, height);
+      const data = image.data;
+      const boundaryData = boundaryCtx.getImageData(0, 0, width, height).data;
+      const startOffset = (startY * width + startX) * 4;
+
+      if(isBoundary(boundaryData, startOffset)) return;
+
+      const target = [data[startOffset], data[startOffset+1], data[startOffset+2], data[startOffset+3]];
+      if(target[3] === fillColor[3] && target[0] === fillColor[0] && target[1] === fillColor[1] && target[2] === fillColor[2]) return;
+
+      const stack = [[startX, startY]];
+      const visited = new Uint8Array(width * height);
+
+      while(stack.length){
+        const [x, y] = stack.pop();
+        if(x < 0 || y < 0 || x >= width || y >= height) continue;
+        const index = y * width + x;
+        if(visited[index]) continue;
+        visited[index] = 1;
+
+        const offset = index * 4;
+        if(isBoundary(boundaryData, offset)) continue;
+        if(!colorsClose(data, offset, target)) continue;
+
+        data[offset] = fillColor[0];
+        data[offset+1] = fillColor[1];
+        data[offset+2] = fillColor[2];
+        data[offset+3] = fillColor[3];
+
+        stack.push([x+1, y]);
+        stack.push([x-1, y]);
+        stack.push([x, y+1]);
+        stack.push([x, y-1]);
+      }
+
+      colorCtx.putImageData(image, 0, 0);
+      paintingStarted = true;
+    }
+
+    function clearColoring(){
+      colorCtx.clearRect(0,0,colorCanvas.width,colorCanvas.height);
+      paintingStarted = false;
+      document.getElementById('coloringFeedback').textContent='';
+      document.getElementById('coloringFeedback').className='feedback';
+      scores.coloring = 0;
+      activityDone.coloring = false;
+      updateFinalScore();
+    }
+
+    function finishColoring(){
+      const fb = document.getElementById('coloringFeedback');
+      if(paintingStarted){
+        scores.coloring = 1;
+        activityDone.coloring = true;
+        fb.textContent='أحسنت! تم حفظ التلوين كنشاط مكتمل.';
+        fb.className='feedback success';
+        playSuccessSound();
+      } else {
+        fb.textContent='ابدأ بالتلوين أولاً ثم اضغط على زر الإنهاء.';
+        fb.className='feedback error';
+        playTryAgainSound();
+      }
+      updateFinalScore();
+    }
+
+    colorCanvas.addEventListener('mousedown', startPaint);
+    colorCanvas.addEventListener('mousemove', drawPaint);
+    window.addEventListener('mouseup', endPaint);
+    colorCanvas.addEventListener('mouseleave', endPaint);
+    colorCanvas.addEventListener('touchstart', e=>{e.preventDefault(); startPaint(e);},{passive:false});
+    colorCanvas.addEventListener('touchmove', e=>{e.preventDefault(); drawPaint(e);},{passive:false});
+    window.addEventListener('touchend', endPaint);
+
+    loadColoringBoundary();
+    updateColorToolButtons();
+
+    // ---- RIDDLES ----
+    const riddleGrid = document.getElementById('riddleGrid');
+    const riddlePrevBtn = document.getElementById('riddlePrevBtn');
+    const riddleNextBtn = document.getElementById('riddleNextBtn');
+    const riddleProgress = document.getElementById('riddleProgress');
+    let currentRiddleIndex = 0;
+    const riddleState = [];
+
+    function renderRiddles(){
+      activityDone.riddles = false;
+      currentRiddleIndex = 0;
+      riddleState.length = riddles.length;
+      for(let i=0;i<riddles.length;i++) riddleState[i] = null;
+      renderCurrentRiddle();
+      const fb = document.getElementById('riddleFeedback');
+      if(fb){ fb.textContent=''; fb.className='feedback'; }
+    }
+
+    function renderCurrentRiddle(){
+      const r = riddles[currentRiddleIndex];
+      riddleGrid.innerHTML='';
+      const card=document.createElement('div');
+      card.className='riddle-card';
+      card.dataset.answer=r.a;
+      card.innerHTML=`
+        <h3>لغز ${currentRiddleIndex+1}</h3>
+        <p>${r.q}</p>
+        <div class="riddle-hint-wrap">
+          <button class="riddle-hint-card" type="button" onclick="toggleRiddleHint(this)" aria-label="اقلب بطاقة التلميح">
+            <div class="riddle-hint-inner">
+              <div class="riddle-hint-face riddle-hint-front">
+                <div class="emoji">💡</div>
+                <div class="title">اضغط لرؤية التلميح</div>
+                <div class="sub">اقلب البطاقة لتظهر الصورة</div>
+              </div>
+              <div class="riddle-hint-face riddle-hint-back">
+                <img src="${assetBase + r.img}" alt="${r.a}">
+                <div class="label">تلميح بصري</div>
+              </div>
+            </div>
+          </button>
+        </div>
+        <div class="choices"></div>
+        <div class="riddle-answer"></div>
+      `;
+      const choices = card.querySelector('.choices');
+      shuffle(r.options).forEach(opt=>{
+        const btn=document.createElement('button');
+        btn.className='choice-btn';
+        btn.textContent=opt;
+        btn.onclick=()=>answerRiddle(card, btn, opt);
+        choices.appendChild(btn);
+      });
+      riddleGrid.appendChild(card);
+      const state = riddleState[currentRiddleIndex];
+      if(state){
+        const all = [...card.querySelectorAll('.choice-btn')];
+        all.forEach(b=>{
+          b.disabled = true;
+          if(b.textContent===state.selected && !state.correct) b.classList.add('wrong');
+          if(b.textContent===r.a) b.classList.add('correct');
+        });
+        const ans = card.querySelector('.riddle-answer');
+        ans.textContent = state.correct ? `أحسنت! الجواب هو: ${r.a}` : `الجواب الصحيح: ${r.a}`;
+        ans.className = 'riddle-answer ' + (state.correct ? 'success' : 'error');
+      }
+      riddleProgress.textContent = `${currentRiddleIndex+1} / ${riddles.length}`;
+      riddlePrevBtn.disabled = currentRiddleIndex === 0;
+      riddleNextBtn.disabled = currentRiddleIndex === riddles.length - 1;
+      lucide.createIcons({root: card});
+    }
+
+    function toggleRiddleHint(btn){
+      btn.classList.toggle('flipped');
+    }
+
+    function answerRiddle(card, btn, opt){
+      if(riddleState[currentRiddleIndex]) return;
+      const answer = card.dataset.answer;
+      const all = [...card.querySelectorAll('.choice-btn')];
+      all.forEach(b=>b.disabled=true);
+      const correct = opt === answer;
+      if(correct){
+        btn.classList.add('correct');
+        card.querySelector('.riddle-answer').textContent = `أحسنت! الجواب هو: ${answer}`;
+        card.querySelector('.riddle-answer').className = 'riddle-answer success';
+        playSuccessSound();
+      }else{
+        btn.classList.add('wrong');
+        const correctBtn = all.find(b=>b.textContent===answer);
+        if(correctBtn) correctBtn.classList.add('correct');
+        card.querySelector('.riddle-answer').textContent = `الجواب الصحيح: ${answer}`;
+        card.querySelector('.riddle-answer').className = 'riddle-answer error';
+        playTryAgainSound();
+      }
+      riddleState[currentRiddleIndex] = {selected: opt, correct};
+      scores.riddles = riddleState.filter(x=>x && x.correct).length;
+      activityDone.riddles = riddleState.every(x=>x !== null);
+      const fb = document.getElementById('riddleFeedback');
+      if(activityDone.riddles){
+        fb.textContent = `أنهيت جميع الألغاز. نتيجتك: ${scores.riddles} / ${riddles.length}`;
+        fb.className = 'feedback success';
+      }else{
+        fb.textContent = 'اضغط على التالي للغز التالي.';
+        fb.className = 'feedback';
+      }
+      updateFinalScore();
+    }
+
+    function changeRiddle(step){
+      const next = currentRiddleIndex + step;
+      if(next < 0 || next >= riddles.length) return;
+      currentRiddleIndex = next;
+      renderCurrentRiddle();
+    }
+
+    // ---- LIVE TEXT ----
+    const passageText = document.getElementById('passageText');
+    const passageInfo = document.getElementById('passageInfo');
+    const seenPassageWords = new Set();
+
+    function renderPassage(){
+      if(!passageText) return;
+      seenPassageWords.clear();
+      scores.liveText = 0;
+      activityDone.liveText = false;
+      passageText.innerHTML = '';
+      const phraseKeys = Object.keys(passageWords).filter(key => key.includes(' ')).sort((a,b)=>b.length-a.length);
+      passageLines.forEach(line=>{
+        const row = document.createElement('div');
+        row.className = 'passage-line';
+        const tokens = line.split(/\s+/);
+        for(let i = 0; i < tokens.length; i++){
+          let matchedPhrase = null;
+          let matchedLength = 0;
+
+          for(const phrase of phraseKeys){
+            const parts = phrase.split(' ');
+            const candidate = tokens.slice(i, i + parts.length).join(' ').replace(/[.،؛:!?؟]/g,'');
+            if(candidate === phrase){
+              matchedPhrase = phrase;
+              matchedLength = parts.length;
+              break;
+            }
+          }
+
+          if(matchedPhrase){
+            const span = document.createElement('span');
+            span.className = 'passage-word target';
+            span.dataset.word = matchedPhrase;
+            span.textContent = tokens.slice(i, i + matchedLength).join(' ') + ' ';
+            span.addEventListener('click', ()=>showPassageWord(matchedPhrase, span));
+            row.appendChild(span);
+            i += matchedLength - 1;
+            continue;
+          }
+
+          const token = tokens[i];
+          const clean = token.replace(/[.،؛:!?؟]/g,'');
+          const span = document.createElement('span');
+          span.className = 'passage-word';
+          span.textContent = token + ' ';
+          if(passageWords[clean]){
+            span.classList.add('target');
+            span.dataset.word = clean;
+            span.addEventListener('click', ()=>showPassageWord(clean, span));
+          }
+          row.appendChild(span);
+        }
+        passageText.appendChild(row);
+      });
+      passageInfo.innerHTML = '<div class="empty">اضغط على كلمة زرقاء من كلمات المطبخ.</div>';
+      document.getElementById('passageProgress').textContent = `الكلمات المكتشفة: 0 / ${Object.keys(passageWords).length}`;
+      document.getElementById('passageFeedback').textContent = '';
+      document.getElementById('passageFeedback').className = 'feedback';
+      
+      const speedSelect = document.getElementById('passageSpeed');
+      if(speedSelect) changePassageSpeed(speedSelect.value);
+
+      updateFinalScore();
+    }
+
+    function showPassageWord(word, el){
+      const item = passageWords[word];
+      if(!item) return;
+      document.querySelectorAll('.passage-word.target.active').forEach(n=>n.classList.remove('active'));
+      if(el) el.classList.add('active');
+      passageInfo.innerHTML = `
+        <div class="passage-preview"><img src="${assetBase + item.img}" alt="${item.base}"></div>
+        <div class="passage-ar-word">${item.base}</div>
+        <div class="passage-translit">${item.translit}</div>
+        <div class="passage-def">${item.definition}</div>
+        <button class="passage-audio-btn play" type="button" onclick="playLiveTextWordAudio('${item.base}', '${item.img}')"><i data-lucide="volume-2"></i> استمع</button>
+      `;
+      lucide.createIcons({root: passageInfo});
+      playLiveTextWordAudio(item.base, item.img);
+      seenPassageWords.add(word);
+      scores.liveText = seenPassageWords.size;
+      activityDone.liveText = seenPassageWords.size === Object.keys(passageWords).length;
+      document.getElementById('passageProgress').textContent = `الكلمات المكتشفة: ${seenPassageWords.size} / ${Object.keys(passageWords).length}`;
+      const fb = document.getElementById('passageFeedback');
+      if(activityDone.liveText){
+        fb.textContent = 'رائع! اكتشفت كل الكلمات في النص.';
+        fb.className = 'feedback success';
+        playSuccessSound();
+      } else {
+        fb.textContent = 'أحسنت. اختر كلمة زرقاء أخرى.';
+        fb.className = 'feedback';
+      }
+      updateFinalScore();
+    }
+
+    function downloadCertificate(){
+      if(!areAllActivitiesDone()) return;
+      const area = document.getElementById('certificateCard');
+      const student = (document.getElementById('studentName')?.value.trim() || 'صديقي').replace(/\s+/g,'-');
+      html2canvas(area,{useCORS:true,scale:2,backgroundColor:null}).then(canvas=>{
+        const link = document.createElement('a');
+        link.download = `certificate-${student}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+
+    // ---- INIT ----
+    renderRearrangeBank();
+    renderCompare();
+    renderHotspot();
+    renderMatching();
+    renderFill();
+    renderLetterRound();
+    renderBubbleRound();
+    renderRiddles();
+    renderPassage();
+    updateFlashcard();
+    updateStudentName();
+    updateNav();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
